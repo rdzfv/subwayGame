@@ -20,6 +20,9 @@ public enum EnumBusinessError implements CommonError {
     // 20000 开头为用户信息相关错误定义
     USER_NOT_EXIST(20001, "用户不存在"),
     NEW_USER(20002, "新用户，请先填写基本信息"),
+    ALREADY_YOUR_FRIENDS_OR_WAIT(20003, "该用户已经是您的好友或好友申请正在等待通过"),
+    NOT_YOUR_FRIEND(20004, "该用户还不是你的好友"),
+    NOT_OUR_USER(20005, "该用户不是我们的用户"),
 
     // 70000开头为数据库执行操作相关错误定义
     UPDATE_FAILED(70001, "更新操作失败"),
