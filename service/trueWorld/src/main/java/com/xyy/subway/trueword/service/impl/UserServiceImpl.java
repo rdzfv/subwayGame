@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserService {
         // model转换entity
         UserInfo userInfo = new UserInfo();
         userInfo.setName(userInfoDetail.getName());
-        userInfo.setIcon_url(userInfo.getIcon_url());
+        userInfo.setIcon_url(userInfoDetail.getIcon_url());
         userInfo.setOpenId(userInfoDetail.getOpenId());
         // 更新用户信息
         UserInfo userInfoResult = userRepository.save(userInfo);
