@@ -1,11 +1,11 @@
 server:
   port: 7002
   servlet:
-    context-path: /artree
+    context-path: /trueword
 
 spring:
   application:
-    name: eureka-client-artree
+    name: eureka-client-trueword
   jpa:
     show-sql: true
     hibernate:
