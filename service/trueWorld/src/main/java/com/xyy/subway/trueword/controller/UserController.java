@@ -3,7 +3,7 @@ package com.xyy.subway.trueword.controller;
 import com.xyy.subway.trueword.entity.UserInfo;
 import com.xyy.subway.trueword.error.BusinessException;
 import com.xyy.subway.trueword.error.EnumBusinessError;
-import com.xyy.subway.trueword.model.FriendsInfo;
+import com.xyy.subway.trueword.model.FriendsDetail;
 import com.xyy.subway.trueword.model.UserInfoDetail;
 import com.xyy.subway.trueword.response.CommonReturnType;
 import com.xyy.subway.trueword.service.UserService;
@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServlet;
 import java.util.ArrayList;
 
 /**
@@ -44,7 +43,7 @@ public class UserController extends BaseController {
      * @author xyy
      * @date 2020/1/22 20:27
      */
-    @ApiOperation(value="通过用户id获取用户信息", tags={}, notes="")
+    @ApiOperation(value="通过用户id获取用户信息", tags={}, notes="测试")
     @RequestMapping(value = "/getUserInfoById", method = RequestMethod.GET)
     @ApiImplicitParams({
             @ApiImplicitParam(name="id", value="用户id", dataType="int", paramType = "query", example="0")
@@ -135,14 +134,14 @@ public class UserController extends BaseController {
      * @author xyy
      * @date 2020/1/25 16:14
     */
-    @ApiOperation(value="查看我的好友列表", tags={}, notes="")
+    @ApiOperation(value="查看我的好友列表", tags={}, notes="返回好友的用户id，用户名，头像图片，加入游戏日期，好友状态")
     @RequestMapping(value = "/listMyFriends", method = RequestMethod.GET)
     @ApiImplicitParams({
             @ApiImplicitParam(name="id", value="用户id", dataType="int", paramType = "query", example="0")
     })
     @ResponseBody
     public CommonReturnType listMyFriends(@ApiParam(name="id", value = "用户id", required = true) int id) throws BusinessException {
-        ArrayList<FriendsInfo> users = userService.listMyFriends(id);
+        ArrayList<FriendsDetail> users = userService.listMyFriends(id);
         return CommonReturnType.create(users);
     }
 
@@ -155,14 +154,14 @@ public class UserController extends BaseController {
     @ApiOperation(value="发送好友申请", tags={}, notes="")
     @RequestMapping(value = "/applyForFriend", method = RequestMethod.GET)
     @ApiImplicitParams({
-            @ApiImplicitParam(name="id", value="用户id", dataType="int", paramType = "query", example="0"),
-            @ApiImplicitParam(name="friendId", value="朋友id", dataType="int", paramType = "query", example="0")
+            @ApiImplicitParam(name="id", value="用户id", dataType="int", paramType = "query", example=""),
+            @ApiImplicitParam(name="friendName", value="朋友name", dataType="int", paramType = "query", example="")
     })
     @ResponseBody
     public CommonReturnType applyForFriend(@ApiParam(name="id", value = "我的用户id", required = true) int id,
-                                           @ApiParam(name="friendId", value = "朋友id", required = true) int friendId
+                                           @ApiParam(name="friendName", value = "朋友name", required = true) String friendName
     ) throws BusinessException {
-        UserInfo userResult = userService.applyForFriend(id, friendId);
+        UserInfo userResult = userService.applyForFriend(id, friendName);
         return CommonReturnType.create(userResult);
     }
 
@@ -183,6 +182,26 @@ public class UserController extends BaseController {
                                            @ApiParam(name="friendId", value = "朋友id", required = true) int friendId
     ) throws BusinessException {
         UserInfo userResult = userService.agreeForFriend(id, friendId);
+        return CommonReturnType.create(userResult);
+    }
+
+
+
+    /**
+     * @author xyy
+     * @date 2020/1/26 10:47
+    */
+    @ApiOperation(value="拒绝好友申请", tags={}, notes="")
+    @RequestMapping(value = "/rejectForFriend", method = RequestMethod.GET)
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="id", value="用户id", dataType="int", paramType = "query", example="0"),
+            @ApiImplicitParam(name="friendId", value="朋友id", dataType="int", paramType = "query", example="0")
+    })
+    @ResponseBody
+    public CommonReturnType rejectForFriend(@ApiParam(name="id", value = "我的用户id", required = true) int id,
+                                           @ApiParam(name="friendId", value = "朋友id", required = true) int friendId
+    ) throws BusinessException {
+        UserInfo userResult = userService.rejectForFriend(id, friendId);
         return CommonReturnType.create(userResult);
     }
 

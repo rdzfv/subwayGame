@@ -17,7 +17,7 @@ import javax.persistence.Id;
 @Data
 @Entity
 @ApiModel(value = "城市", description = "城市")
-public class city {
+public class City {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @ApiModelProperty(value = "城市编号（同八维通）", name = "id", example = "")

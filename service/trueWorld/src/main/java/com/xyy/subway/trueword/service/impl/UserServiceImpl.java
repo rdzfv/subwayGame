@@ -7,7 +7,7 @@ import com.xyy.subway.trueword.dao.UserRepository;
 import com.xyy.subway.trueword.entity.UserInfo;
 import com.xyy.subway.trueword.error.BusinessException;
 import com.xyy.subway.trueword.error.EnumBusinessError;
-import com.xyy.subway.trueword.model.FriendsInfo;
+import com.xyy.subway.trueword.model.FriendsDetail;
 import com.xyy.subway.trueword.model.UserInfoDetail;
 import com.xyy.subway.trueword.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,8 +81,8 @@ public class UserServiceImpl implements UserService {
      * @date 2020/1/25 16:20
     */
     @Override
-    public ArrayList<FriendsInfo> listMyFriends(int id) {
-        ArrayList<FriendsInfo> friendsInfos = new ArrayList<FriendsInfo>();
+    public ArrayList<FriendsDetail> listMyFriends(int id) {
+        ArrayList<FriendsDetail> friendsDetails = new ArrayList<FriendsDetail>();
         // 通过用户id获取他的friendIds
         UserInfo user = userRepository.getByUserId(id);
         String friendIds = user.getFriend_ids();
@@ -99,16 +99,16 @@ public class UserServiceImpl implements UserService {
             String status = (String)afriend.get("status");
             UserInfo aFriend = userRepository.getByUserId(aFriendId);
             // entity转model
-            FriendsInfo friendsInfo = new FriendsInfo();
-            friendsInfo.setUserId(aFriend.getUserId());
-            friendsInfo.setName(aFriend.getName());
-            friendsInfo.setIcon_url(aFriend.getIcon_url());
-            friendsInfo.setCreateTime(aFriend.getCreateTime());
-            friendsInfo.setStatus(status);
+            FriendsDetail friendsDetail = new FriendsDetail();
+            friendsDetail.setUserId(aFriend.getUserId());
+            friendsDetail.setName(aFriend.getName());
+            friendsDetail.setIcon_url(aFriend.getIcon_url());
+            friendsDetail.setCreateTime(aFriend.getCreateTime());
+            friendsDetail.setStatus(status);
 
-            friendsInfos.add(friendsInfo);
+            friendsDetails.add(friendsDetail);
         }
-        return friendsInfos;
+        return friendsDetails;
     }
 
 
@@ -118,10 +118,11 @@ public class UserServiceImpl implements UserService {
      * @date 2020/1/25 17:11
     */
     @Override
-    public UserInfo applyForFriend(int id, int friendId) throws BusinessException {
-        // 验证friendId
-        UserInfo friendInstance = userRepository.getByUserId(friendId);
+    public UserInfo applyForFriend(int id, String friendName) throws BusinessException {
+        // 验证friendName
+        UserInfo friendInstance = userRepository.getByName(friendName);
         if (friendInstance == null) throw new BusinessException(EnumBusinessError.NOT_OUR_USER);
+        int friendId = friendInstance.getUserId();
         // 获取我的信息
         UserInfo user = userRepository.getByUserId(id);
         String friendIds = user.getFriend_ids();
@@ -287,4 +288,70 @@ public class UserServiceImpl implements UserService {
         UserInfo friendResult = userRepository.save(friend);
         return userResult;
     }
+
+
+
+
+    /**
+     * @author xyy
+     * @date 2020/1/26 10:51
+    */
+    @Override
+    public UserInfo rejectForFriend(int id, int friendId) throws BusinessException {
+        // 获取我的信息
+        UserInfo user = userRepository.getByUserId(id);
+        String friendIds = user.getFriend_ids();
+        JSONArray friendIdsArray = JSONArray.parseArray(friendIds);
+        if (friendIdsArray == null) {
+            friendIds = "[]";
+            friendIdsArray = JSONArray.parseArray(friendIds);
+        }
+        for (int i = 0; i < friendIdsArray.size(); i++) {
+            JSONObject afriend = (JSONObject)friendIdsArray.get(i);
+            System.out.println(afriend);
+            if (friendId == (Integer)afriend.get("friendId")) {
+                // 删除原来的
+                friendIdsArray.remove(i);
+                // 组合新的
+                JSONObject newFriendObject = new JSONObject();
+                newFriendObject.put("friendId", friendId);
+                newFriendObject.put("status", UserInfoConstant.REJECTED);
+                // 添加至原数组
+                friendIdsArray.add(newFriendObject);
+            }
+        }
+        String newFriendsJSONStr = friendIdsArray.toJSONString();
+        // 写回数据库
+        user.setFriend_ids(newFriendsJSONStr);
+        UserInfo userResult = userRepository.save(user);
+
+        // 获取好友信息
+        UserInfo friend = userRepository.getByUserId(friendId);
+        String friendFriendIds = friend.getFriend_ids();
+        JSONArray friendFriendIdsArray = JSONArray.parseArray(friendFriendIds);
+        if (friendFriendIdsArray == null) {
+            friendFriendIds = "[]";
+            friendFriendIdsArray = JSONArray.parseArray(friendFriendIds);
+        }
+        for (int i = 0; i < friendFriendIdsArray.size(); i++) {
+            JSONObject afriend = (JSONObject)friendFriendIdsArray.get(i);
+            System.out.println(afriend);
+            if (friendId == (Integer)afriend.get("friendId")) {
+                // 删除原来的
+                friendFriendIdsArray.remove(i);
+                // 组合新的
+                JSONObject newFriendObject = new JSONObject();
+                newFriendObject.put("friendId", friendId);
+                newFriendObject.put("status", UserInfoConstant.REJECTED);
+                // 添加至原数组
+                friendFriendIdsArray.add(newFriendObject);
+            }
+        }
+        String newFriendFriendsJSONStr = friendFriendIdsArray.toJSONString();
+        // 写回数据库
+        friend.setFriend_ids(newFriendFriendsJSONStr);
+        UserInfo friendResult = userRepository.save(friend);
+        return userResult;
+    }
+
 }

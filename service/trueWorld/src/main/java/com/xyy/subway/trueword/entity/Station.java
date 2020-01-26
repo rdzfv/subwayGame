@@ -19,9 +19,8 @@ import javax.persistence.Id;
 @ApiModel(value = "地铁站", description = "地铁站")
 public class Station {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @ApiModelProperty(value = "地铁站编号（同八维通）", name = "id", example = "")
-    private Integer id;
+    private String id;
 
     @ApiModelProperty(value = "站点名称", name = "name", example = "")
     private String name;

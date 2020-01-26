@@ -12,6 +12,6 @@ public class UserInfoConstant {
     public static final String WAITING_DEAL = "待处理";
     // 好友关系
     public static final String FRIENDS = "好友关系";
-    // 被拒绝
-    public static final String REJECTED = "被拒绝";
+    // 已拒绝
+    public static final String REJECTED = "已拒绝";
 }

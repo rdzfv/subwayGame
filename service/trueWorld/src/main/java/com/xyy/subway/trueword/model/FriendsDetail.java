@@ -13,7 +13,7 @@ import java.util.Date;
  * @description
  */
 @Data
-public class FriendsInfo {
+public class FriendsDetail {
 
     @ApiModelProperty(value = "用户id", name = "id", example = "0")
     private Integer userId;
