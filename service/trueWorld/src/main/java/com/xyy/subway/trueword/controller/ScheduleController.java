@@ -6,8 +6,6 @@ import com.xyy.subway.trueword.error.BusinessException;
 import com.xyy.subway.trueword.error.EnumBusinessError;
 import com.xyy.subway.trueword.response.CommonReturnType;
 import com.xyy.subway.trueword.service.ScheduleService;
-import com.xyy.subway.trueword.service.UserService;
-import com.xyy.subway.trueword.service.util.HttpClient;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -32,8 +30,6 @@ public class ScheduleController extends BaseController {
     // 引入
     @Autowired
     private ScheduleService scheduleService;
-    @Autowired
-    private HttpClient httpClient;
 
 
     /**

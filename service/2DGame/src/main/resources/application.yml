@@ -14,7 +14,7 @@ spring:
       hibernate.format_sql: true
     open-in-view: false
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/subwaygame?useSSL=false&&useUnicode=true&characterEncoding=gbk&useJDBCCompliantTimezoneShift=true&serverTimezone=UTC&allowMultiQueries=TRUE
+    url: jdbc:mysql://127.0.0.1:3306/subwaygame?useSSL=false&&useUnicode=true&characterEncoding=gbk&useJDBCCompliantTimezoneShift=true&serverTimezone=UTC&allowMultiQueries=TRUE&allowPublicKeyRetrieval=true
     username: root
     password: wykbjdy999
     driver-class-name: com.mysql.cj.jdbc.Driver

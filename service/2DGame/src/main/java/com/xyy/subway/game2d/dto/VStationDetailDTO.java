@@ -1,25 +1,15 @@
-package com.xyy.subway.game2d.entity;
+package com.xyy.subway.game2d.dto;
 
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-
 /**
  * @author xyy
- * @date 2020/1/23 16:01
+ * @date 2020/1/28 14:21
  * @description
  */
 @Data
-@Entity
-@ApiModel(value = "虚拟地铁站", description = "虚拟地铁站")
-public class VStation {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class VStationDetailDTO {
     @ApiModelProperty(value = "虚拟地铁站编号", name = "id", example = "")
     private Integer id;
 
@@ -27,7 +17,7 @@ public class VStation {
     private String name;
 
     @ApiModelProperty(value = "所在虚拟路线ids", name = "routeIds", example = "")
-    private String vrouteIds;
+    private String routeIds;
 
     @ApiModelProperty(value = "清洁指数", name = "cleaness", example = "")
     private Integer cleaness;
@@ -39,8 +29,12 @@ public class VStation {
     private Integer uncrowedness;
 
     @ApiModelProperty(value = "满意度", name = "satisfactionDegree", example = "")
-    private Integer satisfaction;
+    private Integer satisfactionDegree;
 
     @ApiModelProperty(value = "人流量", name = "satisfactionDegree", example = "")
     private Long visitorFlowrate;
+
+
+
+
 }

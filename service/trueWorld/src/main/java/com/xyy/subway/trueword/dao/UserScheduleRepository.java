@@ -1,6 +1,5 @@
 package com.xyy.subway.trueword.dao;
 
-import com.xyy.subway.trueword.entity.UserInfo;
 import com.xyy.subway.trueword.entity.UserSchedule;
 import org.springframework.data.jpa.repository.JpaRepository;
 

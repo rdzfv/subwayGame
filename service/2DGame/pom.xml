@@ -83,6 +83,21 @@
             <version>1.1.1</version>
         </dependency>
 
+        <!--		lombok		-->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.8</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!--		hutool		-->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>4.1.14</version>
+        </dependency>
+
         <!-- 通用模块 -->
         <dependency>
             <groupId>com.xyy</groupId>

@@ -1,15 +1,22 @@
 package com.xyy.subway.trueword.service.impl;
 
+
+import com.xyy.subway.common.dto.FriendsDTO;
+import com.xyy.subway.common.dto.ShowUserInfoDTO;
+import com.xyy.subway.common.dto.UpdateUserInfoDTO;
+import com.xyy.subway.common.entity.UserInfo;
+import com.xyy.subway.common.service.UserService;
+import com.xyy.subway.common.service.impl.UserServiceImpl;
 import com.xyy.subway.trueword.dao.*;
 import com.xyy.subway.trueword.entity.*;
 import com.xyy.subway.trueword.entity.view.UserScheduleView;
 import com.xyy.subway.trueword.error.BusinessException;
 import com.xyy.subway.trueword.error.EnumBusinessError;
 import com.xyy.subway.trueword.service.ScheduleService;
-import com.xyy.subway.trueword.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -33,8 +40,6 @@ public class ScheduleImpl implements ScheduleService {
     private TrainScheduleRepository trainScheduleRepository;
     @Autowired
     private UserScheduleViewRespository userScheduleViewRespository;
-    @Autowired
-    private UserService userService;
 
 
     /**
@@ -204,8 +209,15 @@ public class ScheduleImpl implements ScheduleService {
     */
     @Override
     public List<UserScheduleView> listMySchedule(int id) throws BusinessException {
+        UserServiceImpl userServiceImpl = new UserServiceImpl();
         // 验证id
-        UserInfo userInfo = userService.getUserInfoById(id);
+        UserInfo userInfo = new UserInfo();
+        try {
+            userInfo = userServiceImpl.getUserInfoById(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         if (userInfo == null) {
             throw new BusinessException(EnumBusinessError.USER_NOT_EXIST);
         }

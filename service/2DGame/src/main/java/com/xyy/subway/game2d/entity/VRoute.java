@@ -27,8 +27,8 @@ public class VRoute {
     @ApiModelProperty(value = "虚拟线路名称", name = "name", example = "")
     private String name;
 
-    @ApiModelProperty(value = "经过的虚拟地铁站Ids", name = "stationIds", example = "1,2,5")
-    private String stationIds;
+    @ApiModelProperty(value = "经过的虚拟地铁站Ids", name = "stationIds", example = "x,x,x")
+    private String vstationIds;
 
     @ApiModelProperty(value = "建造者Id", name = "userId", example = "")
     private Integer userId;
@@ -46,5 +46,5 @@ public class VRoute {
     private Integer satisfactionDegree;
 
     @ApiModelProperty(value = "人流量", name = "satisfactionDegree", example = "")
-    private Long visitorFlowrate;
+    private Long visitorsFlowrate;
 }

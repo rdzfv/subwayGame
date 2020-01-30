@@ -1,7 +1,6 @@
 package com.xyy.subway.trueword.dao;
 
 import com.xyy.subway.trueword.entity.City;
-import com.xyy.subway.trueword.entity.UserInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
