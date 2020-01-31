@@ -33,11 +33,14 @@ public class VStationStore {
     @ApiModelProperty(value = "虚拟地铁站商店类型", name = "type", example = "")
     private Integer type;
 
+    @ApiModelProperty(value = "虚拟地铁站商店图片", name = "type", example = "")
+    private String url;
+
     @ApiModelProperty(value = "虚拟地铁站商店等级", name = "level", example = "")
     private Integer level;
 
     @ApiModelProperty(value = "虚拟地铁站商店位置", name = "name", example = "1,3")
-    private String position;
+    private Integer position;
 
     @ApiModelProperty(value = "虚拟地铁站商店状态", name = "status", example = "")
     private Integer status;

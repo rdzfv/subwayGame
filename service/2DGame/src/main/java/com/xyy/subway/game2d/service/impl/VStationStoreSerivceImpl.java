@@ -8,6 +8,7 @@ import com.xyy.subway.game2d.error.BusinessException;
 import com.xyy.subway.game2d.error.EnumBusinessError;
 import com.xyy.subway.game2d.service.VStationStoreService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.List;
  * @description
  */
 @Service
+@Scope("prototype")
 public class VStationStoreSerivceImpl implements VStationStoreService {
 
     @Autowired
@@ -65,9 +67,39 @@ public class VStationStoreSerivceImpl implements VStationStoreService {
         return vStationStores;
     }
 
+
+
+    /**
+     * @author xyy
+     * @date 2020/1/30 16:00
+    */
     @Override
     public List<VStationStoreType> listAllVStationStoreTypeInfo() {
         List<VStationStoreType> vStationStoreTypes =vStationStoreTypeRespository.findAll();
         return vStationStoreTypes;
+    }
+
+
+
+    /**
+     * @author xyy
+     * @date 2020/1/31 16:25
+    */
+    @Override
+    public boolean postAStore(VStationStore vStationStore) throws BusinessException {
+        vStationStoreRespository.save(vStationStore);
+        return true;
+    }
+
+
+
+    /**
+     * @author xyy
+     * @date 2020/1/31 20:20
+    */
+    @Override
+    public VStationStore updateStationStoreInfo(VStationStore vStationStore) throws BusinessException {
+        vStationStoreRespository.save(vStationStore);
+        return null;
     }
 }

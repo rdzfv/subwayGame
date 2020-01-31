@@ -1,11 +1,14 @@
 package com.xyy.subway.game2d.controller;
 
 
+import com.alibaba.fastjson.JSONObject;
+import com.xyy.subway.game2d.dto.ExpAndLevelDTO;
 import com.xyy.subway.game2d.dto.VRouteStationDTO;
 import com.xyy.subway.game2d.entity.*;
 import com.xyy.subway.game2d.error.BusinessException;
 import com.xyy.subway.game2d.error.EnumBusinessError;
 import com.xyy.subway.game2d.response.CommonReturnType;
+import com.xyy.subway.game2d.service.ToolService;
 import com.xyy.subway.game2d.service.VRouteService;
 import com.xyy.subway.game2d.service.VStationService;
 import com.xyy.subway.game2d.service.VUserService;
@@ -37,6 +40,8 @@ public class VUserController extends BaseController {
     private VRouteService vRouteService;
     @Autowired
     private VStationService vStationService;
+    @Autowired
+    private ToolService toolService;
 
 
     /**
@@ -52,7 +57,13 @@ public class VUserController extends BaseController {
     public CommonReturnType getUserInfoByUserId(@ApiParam(name="id", value = "用户id", required = true) int id) throws BusinessException {
         VUser vuserInstanse = vuserService.getVUserInfoById(id);
         if (vuserInstanse == null) throw new BusinessException(EnumBusinessError.USER_NOT_EXIST);
-        return CommonReturnType.create(vuserInstanse);
+        ExpAndLevelDTO expAndLevelDTO = toolService.calculateExpAndLevel(vuserInstanse.getExp());
+
+        JSONObject object = new JSONObject();
+        object.put("user", vuserInstanse);
+        object.put("levelDetail", expAndLevelDTO);
+
+        return CommonReturnType.create(object);
     }
 
 

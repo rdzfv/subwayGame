@@ -46,4 +46,10 @@ public class VUser {
 
     @ApiModelProperty(value = "人流量", name = "satisfactionDegree", example = "")
     private Long visitorFlowrate;
+
+    @ApiModelProperty(value = "拥有小工总数", name = "workers", example = "")
+    private Integer workers;
+
+    @ApiModelProperty(value = "可用小工总数", name = "availableWorkers", example = "")
+    private Integer availableWorkers;
 }

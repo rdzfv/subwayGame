@@ -2,6 +2,7 @@ package com.xyy.subway.game2d.dao;
 
 import com.xyy.subway.game2d.entity.VStation;
 import com.xyy.subway.game2d.entity.VStationStore;
+import org.springframework.context.annotation.Scope;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.List;
  * @date 2020/1/27 14:49
  * @description
  */
+@Scope("prototype")
 public interface VStationStoreRespository extends JpaRepository<VStationStore, Integer> {
     VStationStore getById(int id);
     List<VStationStore> getAllByVstationId(int id);

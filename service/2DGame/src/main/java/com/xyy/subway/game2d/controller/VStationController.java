@@ -93,7 +93,7 @@ public class VStationController extends BaseController {
             String storeName = vStationStores.get(i).getName();
             int storeTypeId = vStationStores.get(i).getType();
             int storeLevel = vStationStores.get(i).getLevel();
-            String storePosition = vStationStores.get(i).getPosition();
+            int storePosition = vStationStores.get(i).getPosition();
             int storeStatus = vStationStores.get(i).getStatus();
             Long remainTime = vStationStores.get(i).getRemainTime();
 

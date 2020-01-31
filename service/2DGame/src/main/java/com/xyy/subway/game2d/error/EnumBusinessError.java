@@ -20,6 +20,8 @@ public enum EnumBusinessError implements CommonError {
     // 20000 开头为用户信息相关错误定义
     USER_NOT_EXIST(20001, "用户不存在"),
     USERINFO_UPDATE_FAILED(20002, "用户信息更新失败"),
+    USER_NOT_ENOUGH_MONEY(20003, "账户资金不足"),
+    USER_NOT_ENOUGH_WORKER(20003, "可用小工数不足"),
 
     // 30000 开头为虚拟站点相关错误定义
     VSTATION_NOT_EXIST(30001, "虚拟站点不存在"),
@@ -41,8 +43,8 @@ public enum EnumBusinessError implements CommonError {
     VSTATIONTEAM_NOT_EXIST(70001, "虚拟站点队伍不存在"),
 
 
-    // 70000 开头为虚拟站点队伍的相关错误定义
-    VSTATIONTEAMTYPE_NOT_EXIST(70001, "虚拟站点队伍类型不存在");
+    // 80000 开头为虚拟站点队伍的相关错误定义
+    VSTATIONTEAMTYPE_NOT_EXIST(80001, "虚拟站点队伍类型不存在");
 
     private EnumBusinessError(int errCode, String errMsg) {
         this.errCode = errCode;
