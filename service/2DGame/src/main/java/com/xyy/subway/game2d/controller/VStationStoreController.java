@@ -98,7 +98,7 @@ public class VStationStoreController extends BaseController {
      * @date 2020/1/27 14:55
      */
     @ApiOperation(value="建造一个店铺", tags={}, notes="商铺种类中：1表示甜品店，2表示快餐店，3表示服装店，4表示纪念品店")
-    @RequestMapping(value = "/postToBuildAStore", method = RequestMethod.GET)
+    @RequestMapping(value = "/postToBuildAStore", method = RequestMethod.POST)
     @ResponseBody
     @ApiImplicitParams({
             @ApiImplicitParam(name="id", value="用户id", dataType="int", paramType = "query", example=""),
