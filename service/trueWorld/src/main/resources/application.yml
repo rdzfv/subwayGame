@@ -1,5 +1,5 @@
 server:
-  port: 7001
+  port: 7011
   servlet:
     context-path: /trueWorld
 
@@ -14,16 +14,16 @@ spring:
       hibernate.format_sql: true
     open-in-view: false
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/subwaygame?useSSL=false&&useUnicode=true&characterEncoding=gbk&useJDBCCompliantTimezoneShift=true&serverTimezone=PRC&allowMultiQueries=TRUE&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://127.0.0.1:3306/subwaygame?useSSL=false&&useUnicode=true&characterEncoding=gbk&useJDBCCompliantTimezoneShift=true&serverTimezone=PRC&allowMultiQueries=TRUE&allowPublicKeyRetrieval=true&autoReconnect=true
     username: root
     password: wykbjdy999
     driver-class-name: com.mysql.cj.jdbc.Driver
     tomcat:
-      max-active: 4
+      max-active: 10
       min-idle: 2
       initial-size: 2
 
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8000/eureka/
+      defaultZone: http://localhost:8001/eureka/

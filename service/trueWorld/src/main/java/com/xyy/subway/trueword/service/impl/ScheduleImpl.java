@@ -1,11 +1,8 @@
 package com.xyy.subway.trueword.service.impl;
 
 
-import com.xyy.subway.common.dto.FriendsDTO;
-import com.xyy.subway.common.dto.ShowUserInfoDTO;
-import com.xyy.subway.common.dto.UpdateUserInfoDTO;
+
 import com.xyy.subway.common.entity.UserInfo;
-import com.xyy.subway.common.service.UserService;
 import com.xyy.subway.common.service.impl.UserServiceImpl;
 import com.xyy.subway.trueword.dao.*;
 import com.xyy.subway.trueword.entity.*;

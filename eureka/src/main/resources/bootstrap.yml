@@ -1,31 +1,31 @@
 #spring:
 #  application:
 #    name: eureka
-#  profiles: server1
+#  profiles: 111.231.77.198
 #server:
 #  port: 8000
 #eureka:
 #  instance:
-#    hostname: server1
+#    hostname: 111.231.77.198
 #    prefer-ip-address: false
 #  client:
 #    service-url:
-#      defaultZone: http://server2:8000/eureka/,http://server3:8002/eureka/
+#      defaultZone: http://192.168.0.109:8000/eureka/
 #---
 #spring:
 #  application:
 #    name: eureka
-#  profiles: server2
+#  profiles: 192.168.0.109
 #server:
-#  port: 8001
+#  port: 8000
 #eureka:
 #  instance:
-#    hostname: server2
+#    hostname: 192.168.0.109
 #    prefer-ip-address: false
 #  client:
 #    service-url:
-#      defaultZone: http://server1:8000/eureka/,http://server3:8002/eureka/
-#
+#      defaultZone: http://111.231.77.198:8000/eureka/
+
 #---
 #spring:
 #  application:

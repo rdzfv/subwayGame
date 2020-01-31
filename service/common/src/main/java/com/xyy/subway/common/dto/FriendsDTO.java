@@ -1,9 +1,8 @@
-package com.xyy.subway.trueword.model;
+package com.xyy.subway.common.dto;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 
 import java.util.Date;
 
@@ -13,7 +12,7 @@ import java.util.Date;
  * @description
  */
 @Data
-public class FriendsDetail {
+public class FriendsDTO {
 
     @ApiModelProperty(value = "用户id", name = "id", example = "0")
     private Integer userId;

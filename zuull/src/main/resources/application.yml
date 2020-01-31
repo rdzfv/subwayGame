@@ -1,14 +1,14 @@
 server:
-  port: 9100
+  port: 9101
 spring:
   application:
     name: zuul
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8000/eureka/
+      defaultZone: http://localhost:8001/eureka/
 
-#zuul:
+#zuul:..
 #  prefix: /imooc
 #  routes:
 #    course:

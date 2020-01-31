@@ -1,4 +1,4 @@
-package com.xyy.subway.trueword.entity;
+package com.xyy.subway.common.entity;
 
 /**
  * @author xyy

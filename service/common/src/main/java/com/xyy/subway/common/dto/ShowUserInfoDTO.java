@@ -1,4 +1,4 @@
-package com.xyy.subway.trueword.model;
+package com.xyy.subway.common.dto;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -21,26 +21,17 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-@ApiModel(value = "用户对象详情", description = "用户对象详情")
-public class UserInfoDetail {
+@ApiModel(value = "用户展示对象详情", description = "用户展示对象详情")
+public class ShowUserInfoDTO {
 
     @ApiModelProperty(value = "用户id", name = "id", example = "0")
     private Integer userId;
-
-    @ApiModelProperty(value = "openId", name = "openId", example = "")
-    private String openId;
 
     @ApiModelProperty(value = "游戏内的用户名", name = "name", example = "xyy")
     private String name;
 
     @ApiModelProperty(value = "游戏内的头像", name = "icon_url", example = "")
     private String icon_url;
-
-    @ApiModelProperty(value = "sessionKey", name = "sessionKey", example = "")
-    private String sessionKey;
-
-    @ApiModelProperty(value = "token", name = "token", example = "")
-    private String token;
 
     @ApiModelProperty(value = "好友ids", name = "friend_ids", example = "1,4,6,99")
     private String friend_ids;
@@ -52,7 +43,4 @@ public class UserInfoDetail {
     @LastModifiedDate
     @ApiModelProperty(value = "modifyTime", name = "createTime", example = "2020/01/23 14:56:00")
     private Date modifyTime;
-
-    @ApiModelProperty(value = "code", name = "code", example = "")
-    private String code;
 }
