@@ -6,7 +6,7 @@ spring:
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8001/eureka/
+      defaultZone: http://111.231.77.198:8000/eureka/,http://111.231.77.198:8000/eureka/
 
 #zuul:..
 #  prefix: /imooc
