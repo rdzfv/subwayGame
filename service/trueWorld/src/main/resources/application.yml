@@ -1,5 +1,5 @@
 server:
-  port: 7011
+  port: 7001
   servlet:
     context-path: /trueWorld
 
@@ -26,4 +26,4 @@ spring:
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8001/eureka/
+      defaultZone: http://192.168.0.104:8000/eureka/
