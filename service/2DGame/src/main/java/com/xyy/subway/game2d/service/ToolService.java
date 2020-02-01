@@ -10,5 +10,6 @@ import com.xyy.subway.game2d.error.BusinessException;
  */
 public interface ToolService {
     ExpAndLevelDTO calculateExpAndLevel(Long exp);
-    void xyyTimer(long time, int storeId, int workers, int userId, VStationStoreService vStationStoreService) throws BusinessException;
+    void xyyBuildingTimer(long time, int storeId, int workers, int userId, VStationStoreService vStationStoreService) throws BusinessException;
+    void xyyMoneyTimer(int storeId, int userId, float profit, float maxProfit, VStationStoreService vStationStoreService) throws BusinessException;
 }

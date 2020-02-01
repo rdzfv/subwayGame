@@ -1,11 +1,11 @@
 package com.xyy.subway.game2d.service.impl;
 
 import com.xyy.subway.game2d.dto.ExpAndLevelDTO;
-import com.xyy.subway.game2d.entity.VStation;
 import com.xyy.subway.game2d.entity.VStationStore;
 import com.xyy.subway.game2d.entity.VUser;
 import com.xyy.subway.game2d.error.BusinessException;
-import com.xyy.subway.game2d.runnable.XyyTimerRunnable;
+import com.xyy.subway.game2d.runnable.XyyBuildingTimerRunnable;
+import com.xyy.subway.game2d.runnable.XyyMoneyTimerRunnable;
 import com.xyy.subway.game2d.service.ToolService;
 import com.xyy.subway.game2d.service.VStationStoreService;
 import com.xyy.subway.game2d.service.VUserService;
@@ -77,13 +77,13 @@ public class ToolServiceImpl implements ToolService {
     */
     @Override
     @Async
-    public void xyyTimer(long time, int storeId, int workers, int userId, VStationStoreService vStationStoreService) throws BusinessException {
-        XyyTimerRunnable xyyTimerRunnable = new XyyTimerRunnable();
-        xyyTimerRunnable.setStationId(storeId);
-        xyyTimerRunnable.setTime(time);
-        xyyTimerRunnable.setVStationStoreService(vStationStoreService);
+    public void xyyBuildingTimer(long time, int storeId, int workers, int userId, VStationStoreService vStationStoreService) throws BusinessException {
+        XyyBuildingTimerRunnable xyyBuildingTimerRunnable = new XyyBuildingTimerRunnable();
+        xyyBuildingTimerRunnable.setStationId(storeId);
+        xyyBuildingTimerRunnable.setTime(time);
+        xyyBuildingTimerRunnable.setVStationStoreService(vStationStoreService);
 
-        xyyTimerRunnable.run();
+        xyyBuildingTimerRunnable.run();
 
         // 更新店铺状态
         VStationStore vStationStore = vStationStoreService.getVStationStoreInfoById(storeId);
@@ -99,5 +99,29 @@ public class ToolServiceImpl implements ToolService {
         VStationStore vStationStoreInstance = vStationStoreService.getVStationStoreInfoById(storeId);
         vStationStoreInstance.setRemainTime(0L);
         vStationStoreService.updateStationStoreInfo(vStationStoreInstance);
+    }
+
+
+
+
+    /**
+     * @author xyy
+     * @date 2020/2/1 11:19
+    */
+    @Override
+    @Async
+    public void xyyMoneyTimer(int storeId, int userId, float profit, float maxProfit, VStationStoreService vStationStoreService) throws BusinessException {
+        XyyMoneyTimerRunnable xyyMoneyTimerRunnable = new XyyMoneyTimerRunnable();
+        xyyMoneyTimerRunnable.setStoreId(storeId);
+        xyyMoneyTimerRunnable.setProfit(profit);
+        xyyMoneyTimerRunnable.setMaxProfit(maxProfit);
+        xyyMoneyTimerRunnable.setVStationStoreService(vStationStoreService);
+
+        xyyMoneyTimerRunnable.run();
+
+        // 更新店铺已获得金币数
+        VStationStore vStationStore = vStationStoreService.getVStationStoreInfoById(storeId);
+        vStationStore.setAvailableProfit(maxProfit);
+        vStationStoreService.updateStationStoreInfo(vStationStore);
     }
 }

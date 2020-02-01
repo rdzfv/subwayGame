@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
  */
 @Data
 @Service
-public class XyyTimerRunnable implements Runnable {
+public class XyyBuildingTimerRunnable implements Runnable {
 
     private VStationStoreService vStationStoreService;
     private long time;

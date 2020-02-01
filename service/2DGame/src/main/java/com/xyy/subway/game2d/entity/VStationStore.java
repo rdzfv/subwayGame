@@ -47,4 +47,10 @@ public class VStationStore {
 
     @ApiModelProperty(value = "建造剩余时间", name = "status", example = "")
     private Long remainTime;
+
+    @ApiModelProperty(value = "最大存储金币", name = "maxProfit", example = "")
+    private Float maxProfit;
+
+    @ApiModelProperty(value = "已获得金币", name = "availableProfitt", example = "")
+    private Float availableProfit;
 }

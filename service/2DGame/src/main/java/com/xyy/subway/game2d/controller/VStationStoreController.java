@@ -119,7 +119,7 @@ public class VStationStoreController extends BaseController {
         int unlockedIn = (Integer)detailObject.get("unlockedIn");
         int cost = (Integer)detailObject.get("cost");
         float profit = Float.parseFloat(detailObject.get("profit").toString());
-        int maxProfit = (Integer)detailObject.get("maxProfit");
+        float maxProfit = Float.parseFloat(detailObject.get("maxProfit").toString());
         long upExp = Long.parseLong(detailObject.get("upExp").toString());
         int unCrowdedness = (Integer)detailObject.get("unCrowdedness");
         int safety = (Integer)detailObject.get("safety");
@@ -159,6 +159,162 @@ public class VStationStoreController extends BaseController {
         vStationStore.setType(storeType);
         vStationStore.setStatus(0);
         vStationStore.setVstationId(stationId);
+        vStationStore.setRemainTime(building_time);
+        vStationStore.setUrl(picUrl);
+        vStationStore.setAvailableProfit(0f);
+        vStationStore.setMaxProfit(maxProfit);
+
+        vStationStoreService.postAStore(vStationStore);
+
+        // 根据userId获取全部地铁站信息
+        List<VRoute> vRoutes = vRouteService.getVRoutesInfoByUserId(id);
+        ArrayList<VRouteStationDTO> vRouteStationDTOS = new ArrayList<>();
+        if (vRoutes == null) {
+            return CommonReturnType.create(null);
+        }
+        for (int i = 0; i < vRoutes.size(); i ++) {
+            String stationsStr = vRoutes.get(i).getVstationIds();
+            int routeId = vRoutes.get(i).getId();
+            String routeName = vRoutes.get(i).getName();
+            String[] stationIds = stationsStr.split(",");
+            for (int j = 0; j < stationIds.length; j ++) {
+                VRouteStationDTO vRouteStationDTO = new VRouteStationDTO();
+                int stationIdId = Integer.parseInt(stationIds[j]);
+                VStation vStationInstance = vStationService.getVStationInfoById(stationIdId);
+                String stationName = vStationInstance.getName();
+                vRouteStationDTO.setUserId(id);
+                vRouteStationDTO.setRouteId(routeId);
+                vRouteStationDTO.setRouteName(routeName);
+                vRouteStationDTO.setRouteStationId(stationId);
+                vRouteStationDTO.setRouteStationName(stationName);
+                vRouteStationDTOS.add(vRouteStationDTO);
+            }
+        }
+
+        // 计算用户的总指数
+        int cleanSum = 0;
+        int safeSum = 0;
+        int uncrowdedSum = 0;
+        for (int i = 0; i < vRouteStationDTOS.size(); i ++) {
+            int aStationId = vRouteStationDTOS.get(i).getRouteStationId();
+            VStation vStationInstance = vStationService.getVStationInfoById(aStationId);
+            cleanSum = cleanSum + vStationInstance.getCleaness();
+            safeSum = safeSum + vStationInstance.getSecurity();
+            uncrowdedSum = uncrowdedSum + vStationInstance.getUncrowedness();
+        }
+        cleanSum = cleanSum / vRouteStationDTOS.size();
+        safeSum = safeSum / vRouteStationDTOS.size();
+        uncrowdedSum = uncrowdedSum / vRouteStationDTOS.size();
+        int satisfiyed = (cleanSum + safeSum + uncrowdedSum) / 3;
+
+        // 更新用户信息
+        vUser.setCleaness(cleanSum);
+        vUser.setSecurity(safeSum);
+        vUser.setUncrowedness(uncrowdedSum);
+        vUser.setSatisfactionDegree(satisfiyed);
+        vUser.setAvailableWorkers(vUser.getWorkers() - worker);
+        vUser.setExp(vUser.getExp() + upExp);
+        vUser.setMoney(vUser.getMoney() - cost);
+        vUser.setVisitorFlowrate(vUser.getVisitorFlowrate() + visitor);
+
+        // 判断是否升级了
+        int isUpLevel = 0;
+        ExpAndLevelDTO expAndLevelDTO = toolService.calculateExpAndLevel(vUser.getExp());
+        if (expAndLevelDTO.getLevel() != vUser.getLevel()) {
+            vUser.setLevel(expAndLevelDTO.getLevel());
+            isUpLevel = 1;
+        }
+
+        // 把更新后的用户信息写入数据库
+        vUserService.updateUserInfo(vUser);
+
+        // 构造返回对象
+        JSONObject object = new JSONObject();
+        object.put("newStore", vStationStore);
+        object.put("isUpLevel", isUpLevel);
+        object.put("newUser", vUser);
+        object.put("isSurprise", 0);
+        object.put("levelDetail", expAndLevelDTO);
+        object.put("storeTypeDetail", detailObject);
+
+        // 开始建筑计时
+        int storeId = vStationStore.getId();
+        toolService.xyyBuildingTimer(building_time, storeId, worker, id, vStationStoreService); //创建线程任务时，直接将所需依赖注入的bean携带进子线程中
+
+        // 开始金币计时
+        toolService.xyyMoneyTimer(storeId, id, profit, maxProfit, vStationStoreService);
+
+        return CommonReturnType.create(object);
+    }
+
+
+
+
+    /**
+     * @author xyy
+     * @date 2020/2/1 10:34
+    */
+    @ApiOperation(value="升级店铺", tags={}, notes="商铺种类中：1表示甜品店，2表示快餐店，3表示服装店，4表示纪念品店")
+    @RequestMapping(value = "/updateStore", method = RequestMethod.POST)
+    @ResponseBody
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="id", value="用户id", dataType="int", paramType = "query", example=""),
+            @ApiImplicitParam(name="storeId", value="商店id", dataType="int", paramType = "query", example=""),
+            @ApiImplicitParam(name="stationId", value="虚拟站点id", dataType="int", paramType = "query", example="")
+    })
+    public CommonReturnType postToBuildAStore(@ApiParam(name="id", value = "用户id", required = true) int id,
+                                              @ApiParam(name="stationId", value = "虚拟站点id", required = true) int stationId,
+                                              @ApiParam(name="storeId", value = "商店id", required = true) int storeId
+    ) throws BusinessException {
+        // 通过商店id获取商店信息
+        VStationStore vStationStore = vStationStoreService.getVStationStoreInfoById(storeId);
+        int preLevel = vStationStore.getLevel();
+        int storeType = vStationStore.getType();
+        // 通过商铺种类获取商铺种类详细信息
+        VStationStoreType vStationStoreType = vStationStoreService.getVStationStoreTypeInfoById(storeType);
+        String detail = vStationStoreType.getDetail();
+        JSONArray detailArray = JSONArray.parseArray(detail);
+        JSONObject detailObject = (JSONObject)detailArray.get(preLevel);
+        int unlockedIn = (Integer)detailObject.get("unlockedIn");
+        int cost = (Integer)detailObject.get("cost");
+        float profit = Float.parseFloat(detailObject.get("profit").toString());
+        int maxProfit = (Integer)detailObject.get("maxProfit");
+        long upExp = Long.parseLong(detailObject.get("upExp").toString());
+        int unCrowdedness = (Integer)detailObject.get("unCrowdedness");
+        int safety = (Integer)detailObject.get("safety");
+        int tidy = (Integer)detailObject.get("tidy");
+        int worker = (Integer)detailObject.get("worker");
+        int visitor = (Integer)detailObject.get("visitor");
+        long building_time = Long.parseLong(detailObject.get("building_time").toString());
+        String picUrl = (String)detailObject.get("picUrl");
+
+
+        // 验证当前账户金钱是否充足
+        VUser vUser =  vUserService.getVUserInfoById(id);
+        Long money = vUser.getMoney();
+        if (cost > money) {
+            throw new BusinessException(EnumBusinessError.USER_NOT_ENOUGH_MONEY);
+        }
+        // 验证当前账户小工是否充足
+        int availableWorkers = vUser.getAvailableWorkers();
+        if (availableWorkers < worker) {
+            throw new BusinessException(EnumBusinessError.USER_NOT_ENOUGH_WORKER);
+        }
+        // 获取当前地铁站信息
+        VStation vStation = vStationService.getVStationInfoById(stationId);
+        vStation.setSatisfaction(vStation.getSecurity() + safety);
+        vStation.setUncrowedness(vStation.getUncrowedness() + unCrowdedness);
+        vStation.setCleaness(vStation.getCleaness() + tidy);
+        vStation.setSatisfaction((vStation.getSecurity() + vStation.getUncrowedness() + vStation.getCleaness()) / 3);
+
+        vStation.setVisitorFlowrate(vStation.getVisitorFlowrate() + visitor);
+
+        // station信息写入数据库
+        vStationService.updateVStationInfo(vStation);
+        // store信息写入数据库
+        VStationStore vStationStoreInstance = new VStationStore();
+        vStationStore.setLevel(preLevel + 1);
+        vStationStore.setStatus(0);
         vStationStore.setRemainTime(building_time);
         vStationStore.setUrl(picUrl);
         vStationStoreService.postAStore(vStationStore);
@@ -234,9 +390,52 @@ public class VStationStoreController extends BaseController {
         object.put("levelDetail", expAndLevelDTO);
         object.put("storeTypeDetail", detailObject);
 
-        // 开始计时
-        int storeId = vStationStore.getId();
-        toolService.xyyTimer(building_time, storeId, worker, id, vStationStoreService); //创建线程任务时，直接将所需依赖注入的bean携带进子线程中
+        // 开始建筑计时
+        toolService.xyyBuildingTimer(building_time, storeId, worker, id, vStationStoreService); //创建线程任务时，直接将所需依赖注入的bean携带进子线程中
+
+        // 开始金币计时
+        toolService.xyyMoneyTimer(storeId, id, profit, maxProfit, vStationStoreService);
+
+        return CommonReturnType.create(object);
+    }
+
+
+
+
+
+    /**
+     * @author xyy
+     * @date 2020/2/1 11:39
+    */
+    @ApiOperation(value="收取金币", tags={}, notes="")
+    @RequestMapping(value = "/harvestMoney", method = RequestMethod.GET)
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="userId", value="用户id", dataType="int", paramType = "query", example=""),
+            @ApiImplicitParam(name="storeId", value="商店id", dataType="int", paramType = "query", example=""),
+            @ApiImplicitParam(name="money", value="收取金币数量", dataType="int", paramType = "query", example=""),
+    })
+    @ResponseBody
+    public CommonReturnType harvestMoney(@ApiParam(name="userId", value = "用户id", required = true) int userId,
+                                         @ApiParam(name="storeId", value = "商店id", required = true) int storeId,
+                                         @ApiParam(name="money", value = "收取金币数量", required = true) float money
+    ) throws BusinessException {
+        // 更新店铺已赚取金币
+        VStationStore vStationStore = vStationStoreService.getVStationStoreInfoById(storeId);
+        if (vStationStore == null) throw new BusinessException(EnumBusinessError.VSTATIONSTORE_NOT_EXIST);
+        vStationStore.setAvailableProfit(vStationStore.getAvailableProfit() - money);
+        vStationStoreService.updateStationStoreInfo(vStationStore);
+
+        // 更新用户金币数
+        VUser vUser = vUserService.getVUserInfoById(userId);
+        vUser.setMoney(vUser.getMoney() + (long)money);
+        vUserService.updateUserInfo(vUser);
+
+
+        // 构造返回对象
+        JSONObject object = new JSONObject();
+        object.put("newStore", vStationStore);
+        object.put("newUser", vUser);
+        object.put("isSurprise", 0);
 
         return CommonReturnType.create(object);
     }
