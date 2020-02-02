@@ -1,5 +1,5 @@
 server:
-  port: 7013
+  port: 7003
   servlet:
     context-path: /game2d
 
@@ -14,7 +14,7 @@ spring:
       hibernate.format_sql: true
     open-in-view: false
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/subwaygame?useSSL=false&&useUnicode=true&characterEncoding=gbk&useJDBCCompliantTimezoneShift=true&serverTimezone=UTC&allowMultiQueries=TRUE&allowPublicKeyRetrieval=true&autoReconnect=true
+    url: jdbc:mysql://111.231.77.198:3306/subwaygame?useSSL=false&&useUnicode=true&characterEncoding=gbk&useJDBCCompliantTimezoneShift=true&serverTimezone=UTC&allowMultiQueries=TRUE&allowPublicKeyRetrieval=true&autoReconnect=true
     username: root
     password: wykbjdy999
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -24,6 +24,14 @@ spring:
       initial-size: 2
 
 eureka:
+  instance:
+    #设置使用IP
+    prefer-ip-address: true
+    #设置外网IP号
+    ip-address: 47.101.146.28
+    #设置外网端口号
+    non-secure-port: 7003
+    instance-id: http://47.101.146.28:7003
   client:
     service-url:
-      defaultZone: http://localhost:8001/eureka/
+      defaultZone: http://111.231.77.198:8000/eureka/

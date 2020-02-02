@@ -38,4 +38,10 @@ public class VStationStoreDTO {
 
     @ApiModelProperty(value = "升级策略", name = "status", example = "")
     private String levelUpJSON;
+
+    @ApiModelProperty(value = "最大存储金币", name = "maxProfit", example = "")
+    private Float maxProfit;
+
+    @ApiModelProperty(value = "已获得金币", name = "availableProfitt", example = "")
+    private Float availableProfit;
 }

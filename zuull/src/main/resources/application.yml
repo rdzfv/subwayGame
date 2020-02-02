@@ -1,21 +1,33 @@
 server:
-  port: 9101
+  port: 9100
 spring:
   application:
     name: zuul
 eureka:
+  instance:
+    #设置使用IP
+    prefer-ip-address: true
+    #设置外网IP号
+    ip-address: 111.231.77.198
+    #设置外网端口号
+    non-secure-port: 9100
+    instance-id: http://111.231.77.198:9100
   client:
     service-url:
-      defaultZone: http://111.231.77.198:8000/eureka/,http://111.231.77.198:8000/eureka/
+      defaultZone: http://111.231.77.198:8000/eureka/
 
-#zuul:..
-#  prefix: /imooc
-#  routes:
-#    course:
-#      path: /homepage-course/**
-#      serviceId: eureka-client-homepage-course
-#      strip-prefix: false
-#    user:
-#      path: /homepage-user/**
-#      serviceId: eureka-client-homepage-user
-#      strip-prefix: false
+zuul:
+  prefix: /fwwb
+  routes:
+    common:
+      path: /common/**
+      serviceId: eureka-client-common
+      strip-prefix: false
+    game2d:
+      path: /game2d/**
+      serviceId: eureka-client-game2d
+      strip-prefix: false
+    trueworld:
+      path: /trueWorld/**
+      serviceId: eureka-client-trueWorld
+      strip-prefix: false
