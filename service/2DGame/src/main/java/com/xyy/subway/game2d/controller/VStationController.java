@@ -1,5 +1,6 @@
 package com.xyy.subway.game2d.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.xyy.subway.game2d.dto.VStationStoreDTO;
 import com.xyy.subway.game2d.entity.VStation;
 import com.xyy.subway.game2d.entity.VStationStore;
@@ -115,5 +116,27 @@ public class VStationController extends BaseController {
             vStationStoreDTOS.add(vStationStoreDTO);
         }
         return CommonReturnType.create(vStationStoreDTOS);
+    }
+
+
+
+    /**
+     * @author xyy
+     * @date 2020/2/2 15:49
+    */
+    @ApiOperation(value="新建一个地铁站", tags={}, notes="")
+    @RequestMapping(value = "/newAStation", method = RequestMethod.POST)
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="id", value="用户id", dataType="int", paramType = "query", example="0"),
+            @ApiImplicitParam(name="routeId", value="地铁线id", dataType="int", paramType = "query", example="0"),
+            @ApiImplicitParam(name="name", value="地铁站名称", dataType="string", paramType = "query", example="0")
+    })
+    @ResponseBody
+    public CommonReturnType newAStation(@ApiParam(name="id", value = "用户id", required = true) int id,
+                                        @ApiParam(name="routeId", value = "地铁线id", required = true) int routeId,
+                                        @ApiParam(name="name", value = "地铁站名称", required = true) String name
+    ) throws BusinessException {
+        JSONObject returnJSON = vStationService.newAStation(id, routeId, name);
+        return CommonReturnType.create(returnJSON);
     }
 }
