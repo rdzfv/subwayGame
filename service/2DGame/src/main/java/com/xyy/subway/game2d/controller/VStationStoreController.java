@@ -152,6 +152,7 @@ public class VStationStoreController extends BaseController {
 
         // station信息写入数据库
         vStationService.updateVStationInfo(vStation);
+
         // store信息写入数据库
         VStationStore vStationStore = new VStationStore();
         vStationStore.setLevel(1);
@@ -164,7 +165,7 @@ public class VStationStoreController extends BaseController {
         vStationStore.setAvailableProfit(0f);
         vStationStore.setMaxProfit(maxProfit);
 
-        vStationStoreService.postAStore(vStationStore);
+        VStationStore vStationStoreResult = vStationStoreService.postAStore(vStationStore);
 
         // 根据userId获取全部地铁站信息
         List<VRoute> vRoutes = vRouteService.getVRoutesInfoByUserId(id);
@@ -239,10 +240,10 @@ public class VStationStoreController extends BaseController {
 
         // 开始建筑计时
         int storeId = vStationStore.getId();
-        toolService.xyyBuildingTimer(building_time, storeId, worker, id, vStationStoreService); //创建线程任务时，直接将所需依赖注入的bean携带进子线程中
+        toolService.xyyBuildingTimer(building_time, vStationStoreResult.getId(), worker, id, vStationStoreService); //创建线程任务时，直接将所需依赖注入的bean携带进子线程中
 
         // 开始金币计时
-        toolService.xyyMoneyTimer(storeId, id, profit, maxProfit, vStationStoreService);
+        toolService.xyyMoneyTimer(vStationStoreResult.getId(), id, profit, maxProfit, vStationStoreService);
 
         return CommonReturnType.create(object);
     }
@@ -311,13 +312,14 @@ public class VStationStoreController extends BaseController {
 
         // station信息写入数据库
         vStationService.updateVStationInfo(vStation);
+
         // store信息写入数据库
         VStationStore vStationStoreInstance = new VStationStore();
-        vStationStore.setLevel(preLevel + 1);
-        vStationStore.setStatus(0);
-        vStationStore.setRemainTime(building_time);
-        vStationStore.setUrl(picUrl);
-        vStationStoreService.postAStore(vStationStore);
+        vStationStoreInstance.setLevel(preLevel + 1);
+        vStationStoreInstance.setStatus(0);
+        vStationStoreInstance.setRemainTime(building_time);
+        vStationStoreInstance.setUrl(picUrl);
+        VStationStore vStationStoreResult = vStationStoreService.postAStore(vStationStoreInstance);
 
         // 根据userId获取全部地铁站信息
         List<VRoute> vRoutes = vRouteService.getVRoutesInfoByUserId(id);

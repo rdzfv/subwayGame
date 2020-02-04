@@ -86,9 +86,9 @@ public class VStationStoreSerivceImpl implements VStationStoreService {
      * @date 2020/1/31 16:25
     */
     @Override
-    public boolean postAStore(VStationStore vStationStore) throws BusinessException {
-        vStationStoreRespository.save(vStationStore);
-        return true;
+    public VStationStore postAStore(VStationStore vStationStore) throws BusinessException {
+        VStationStore vStationStoreInstance = vStationStoreRespository.save(vStationStore);
+        return vStationStoreInstance;
     }
 
 

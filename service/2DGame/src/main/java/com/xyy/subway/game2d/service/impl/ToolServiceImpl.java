@@ -57,7 +57,7 @@ public class ToolServiceImpl implements ToolService {
             expAndLevelDTO.setLevel(5);
             expAndLevelDTO.setNextLevelExp(2000L);
             return expAndLevelDTO;
-        } else if (exp < 3000) {
+        } else if (exp < 9999000) {
             ExpAndLevelDTO expAndLevelDTO = new ExpAndLevelDTO();
             expAndLevelDTO.setExp(exp);
             expAndLevelDTO.setLevel(6);

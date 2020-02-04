@@ -16,6 +16,6 @@ public interface VStationStoreService {
     VStationStoreType getVStationStoreTypeInfoById(int id) throws BusinessException;
     List<VStationStore> getVStationStoreInfoByStationId(int id) throws BusinessException;
     List<VStationStoreType> listAllVStationStoreTypeInfo();
-    boolean postAStore(VStationStore vStationStore) throws BusinessException;
+    VStationStore postAStore(VStationStore vStationStore) throws BusinessException;
     VStationStore updateStationStoreInfo(VStationStore vStationStore) throws BusinessException;
 }
