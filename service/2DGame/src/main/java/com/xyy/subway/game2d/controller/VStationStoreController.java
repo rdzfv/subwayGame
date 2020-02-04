@@ -231,7 +231,7 @@ public class VStationStoreController extends BaseController {
 
         // 构造返回对象
         JSONObject object = new JSONObject();
-        object.put("newStore", vStationStore);
+        object.put("newStore", vStationStoreResult);
         object.put("isUpLevel", isUpLevel);
         object.put("newUser", vUser);
         object.put("isSurprise", 0);
@@ -314,12 +314,11 @@ public class VStationStoreController extends BaseController {
         vStationService.updateVStationInfo(vStation);
 
         // store信息写入数据库
-        VStationStore vStationStoreInstance = new VStationStore();
-        vStationStoreInstance.setLevel(preLevel + 1);
-        vStationStoreInstance.setStatus(0);
-        vStationStoreInstance.setRemainTime(building_time);
-        vStationStoreInstance.setUrl(picUrl);
-        VStationStore vStationStoreResult = vStationStoreService.postAStore(vStationStoreInstance);
+        vStationStore.setLevel(preLevel + 1);
+        vStationStore.setStatus(0);
+        vStationStore.setRemainTime(building_time);
+        vStationStore.setUrl(picUrl);
+        VStationStore vStationStoreResult = vStationStoreService.postAStore(vStationStore);
 
         // 根据userId获取全部地铁站信息
         List<VRoute> vRoutes = vRouteService.getVRoutesInfoByUserId(id);
@@ -385,7 +384,7 @@ public class VStationStoreController extends BaseController {
 
         // 构造返回对象
         JSONObject object = new JSONObject();
-        object.put("newStore", vStationStore);
+        object.put("newStore", vStationStoreResult);
         object.put("isUpLevel", isUpLevel);
         object.put("newUser", vUser);
         object.put("isSurprise", 0);
