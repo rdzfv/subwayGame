@@ -44,4 +44,7 @@ public class VStationStoreDTO {
 
     @ApiModelProperty(value = "已获得金币", name = "availableProfitt", example = "")
     private Float availableProfit;
+
+    @ApiModelProperty(value = "是否已被删除", name = "isDeleted", example = "")
+    private Integer isDeleted;
 }
