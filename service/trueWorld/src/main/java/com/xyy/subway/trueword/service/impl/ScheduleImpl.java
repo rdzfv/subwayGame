@@ -2,8 +2,7 @@ package com.xyy.subway.trueword.service.impl;
 
 
 
-import com.xyy.subway.common.entity.UserInfo;
-import com.xyy.subway.common.service.impl.UserServiceImpl;
+import com.xyy.subway.trueword.entity.UserInfo;
 import com.xyy.subway.trueword.dao.*;
 import com.xyy.subway.trueword.entity.*;
 import com.xyy.subway.trueword.entity.view.UserScheduleView;
@@ -13,7 +12,6 @@ import com.xyy.subway.trueword.service.ScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 

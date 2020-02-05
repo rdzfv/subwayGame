@@ -13,7 +13,6 @@
 
     <packaging>pom</packaging>
     <modules>
-        <module>common</module>
         <module>trueWorld</module>
         <module>ARTree</module>
         <module>2DGame</module>
