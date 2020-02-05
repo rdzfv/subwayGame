@@ -1,7 +1,10 @@
 package com.xyy.subway.game2d.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
 import com.xyy.subway.game2d.dao.VStationStoreRespository;
 import com.xyy.subway.game2d.dao.VStationStoreTypeRespository;
+import com.xyy.subway.game2d.entity.VStation;
 import com.xyy.subway.game2d.entity.VStationStore;
 import com.xyy.subway.game2d.entity.VStationStoreType;
 import com.xyy.subway.game2d.error.BusinessException;
@@ -101,5 +104,21 @@ public class VStationStoreSerivceImpl implements VStationStoreService {
     public VStationStore updateStationStoreInfo(VStationStore vStationStore) throws BusinessException {
         vStationStoreRespository.save(vStationStore);
         return null;
+    }
+
+
+
+
+    /**
+     * @author xyy
+     * @date 2020/2/5 10:13
+    */
+    @Override
+    public VStationStore moveStore(int id, int newPos) throws BusinessException {
+        // 数据库查出待更新对象
+        VStationStore vStationStore = vStationStoreRespository.getById(id);
+        vStationStore.setPosition(newPos);
+        VStationStore vStationStoreResult = vStationStoreRespository.save(vStationStore);
+        return vStationStoreResult;
     }
 }

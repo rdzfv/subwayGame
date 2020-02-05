@@ -440,4 +440,26 @@ public class VStationStoreController extends BaseController {
 
         return CommonReturnType.create(object);
     }
+
+
+
+
+    /**
+     * @author xyy
+     * @date 2020/2/5 10:08
+    */
+    @ApiOperation(value="移动商铺", tags={}, notes="")
+    @RequestMapping(value = "/moveStore", method = RequestMethod.GET)
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="id", value="虚拟站点商店id", dataType="int", paramType = "query", example=""),
+            @ApiImplicitParam(name="newPos", value="新的位置", dataType="int", paramType = "query", example=""),
+    })
+    @ResponseBody
+    public CommonReturnType moveStore(@ApiParam(name="id", value = "虚拟站点商店id", required = true) int id,
+                                      @ApiParam(name="newPos", value = "新的位置", required = true) int newPos
+    ) throws BusinessException {
+        VStationStore vStationStore = vStationStoreService.moveStore(id, newPos);
+        if (vStationStore == null) throw new BusinessException(EnumBusinessError.VSTATIONSTORE_NOT_EXIST);
+        return CommonReturnType.create(vStationStore);
+    }
 }

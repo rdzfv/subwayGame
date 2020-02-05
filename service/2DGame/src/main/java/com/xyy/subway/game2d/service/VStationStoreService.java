@@ -18,4 +18,5 @@ public interface VStationStoreService {
     List<VStationStoreType> listAllVStationStoreTypeInfo();
     VStationStore postAStore(VStationStore vStationStore) throws BusinessException;
     VStationStore updateStationStoreInfo(VStationStore vStationStore) throws BusinessException;
+    VStationStore moveStore(int id, int newPos) throws BusinessException;
 }
