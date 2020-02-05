@@ -19,4 +19,5 @@ public interface VStationStoreService {
     VStationStore postAStore(VStationStore vStationStore) throws BusinessException;
     VStationStore updateStationStoreInfo(VStationStore vStationStore) throws BusinessException;
     VStationStore moveStore(int id, int newPos) throws BusinessException;
+    VStationStore removeStore(int id) throws BusinessException;
 }

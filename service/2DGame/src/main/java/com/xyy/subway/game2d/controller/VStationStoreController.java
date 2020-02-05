@@ -447,7 +447,7 @@ public class VStationStoreController extends BaseController {
     /**
      * @author xyy
      * @date 2020/2/5 10:08
-    */
+     */
     @ApiOperation(value="移动商铺", tags={}, notes="")
     @RequestMapping(value = "/moveStore", method = RequestMethod.GET)
     @ApiImplicitParams({
@@ -459,6 +459,25 @@ public class VStationStoreController extends BaseController {
                                       @ApiParam(name="newPos", value = "新的位置", required = true) int newPos
     ) throws BusinessException {
         VStationStore vStationStore = vStationStoreService.moveStore(id, newPos);
+        if (vStationStore == null) throw new BusinessException(EnumBusinessError.VSTATIONSTORE_NOT_EXIST);
+        return CommonReturnType.create(vStationStore);
+    }
+
+
+
+
+    /**
+     * @author xyy
+     * @date 2020/2/5 10:30
+    */
+    @ApiOperation(value="删除商铺", tags={}, notes="")
+    @RequestMapping(value = "/removeStore", method = RequestMethod.GET)
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="id", value="虚拟站点商店id", dataType="int", paramType = "query", example="")
+    })
+    @ResponseBody
+    public CommonReturnType removeStore(@ApiParam(name="id", value = "虚拟站点商店id", required = true) int id) throws BusinessException {
+        VStationStore vStationStore = vStationStoreService.removeStore(id);
         if (vStationStore == null) throw new BusinessException(EnumBusinessError.VSTATIONSTORE_NOT_EXIST);
         return CommonReturnType.create(vStationStore);
     }

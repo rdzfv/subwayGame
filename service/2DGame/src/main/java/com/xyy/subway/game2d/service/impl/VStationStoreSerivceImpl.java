@@ -115,9 +115,23 @@ public class VStationStoreSerivceImpl implements VStationStoreService {
     */
     @Override
     public VStationStore moveStore(int id, int newPos) throws BusinessException {
-        // 数据库查出待更新对象
         VStationStore vStationStore = vStationStoreRespository.getById(id);
         vStationStore.setPosition(newPos);
+        VStationStore vStationStoreResult = vStationStoreRespository.save(vStationStore);
+        return vStationStoreResult;
+    }
+
+
+
+
+    /**
+     * @author xyy
+     * @date 2020/2/5 10:32
+    */
+    @Override
+    public VStationStore removeStore(int id) throws BusinessException {
+        VStationStore vStationStore = vStationStoreRespository.getById(id);
+        vStationStore.setIsDeleted(1);
         VStationStore vStationStoreResult = vStationStoreRespository.save(vStationStore);
         return vStationStoreResult;
     }
