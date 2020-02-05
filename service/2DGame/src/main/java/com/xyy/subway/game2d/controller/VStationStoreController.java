@@ -164,6 +164,7 @@ public class VStationStoreController extends BaseController {
         vStationStore.setUrl(picUrl);
         vStationStore.setAvailableProfit(0f);
         vStationStore.setMaxProfit(maxProfit);
+        vStationStore.setIsDeleted(0);
 
         VStationStore vStationStoreResult = vStationStoreService.postAStore(vStationStore);
 
