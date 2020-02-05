@@ -7,8 +7,8 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="trueWorld" />
         <module name="_2DGame" />
+        <module name="trueWorld" />
         <module name="ARTree" />
         <module name="zuull" />
         <module name="eureka" />

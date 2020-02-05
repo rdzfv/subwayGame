@@ -97,6 +97,9 @@ public class VStationController extends BaseController {
             int storePosition = vStationStores.get(i).getPosition();
             int storeStatus = vStationStores.get(i).getStatus();
             Long remainTime = vStationStores.get(i).getRemainTime();
+            Float avaliableProfit = vStationStores.get(i).getAvailableProfit();
+            Float maxProfit = vStationStores.get(i).getMaxProfit();
+            int isDeleted = vStationStores.get(i).getIsDeleted();
 
             // 根据storeType获取相应升级信息
             VStationStoreType vStationStoreType = vStationStoreService.getVStationStoreTypeInfoById(storeTypeId);
@@ -112,6 +115,10 @@ public class VStationController extends BaseController {
             vStationStoreDTO.setRemainTime(remainTime);
             vStationStoreDTO.setType(storeTypeName);
             vStationStoreDTO.setLevelUpJSON(levelUpJSON);
+            vStationStoreDTO.setAvailableProfit(avaliableProfit);
+            vStationStoreDTO.setMaxProfit(maxProfit);
+            vStationStoreDTO.setIsDeleted(isDeleted);
+
 
             vStationStoreDTOS.add(vStationStoreDTO);
         }
