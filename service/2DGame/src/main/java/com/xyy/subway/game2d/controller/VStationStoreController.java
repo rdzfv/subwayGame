@@ -165,6 +165,7 @@ public class VStationStoreController extends BaseController {
         vStationStore.setAvailableProfit(0f);
         vStationStore.setMaxProfit(maxProfit);
         vStationStore.setIsDeleted(0);
+        vStationStore.setIsLevelup(0);
 
         VStationStore vStationStoreResult = vStationStoreService.postAStore(vStationStore);
 
@@ -280,7 +281,7 @@ public class VStationStoreController extends BaseController {
         int unlockedIn = (Integer)detailObject.get("unlockedIn");
         int cost = (Integer)detailObject.get("cost");
         float profit = Float.parseFloat(detailObject.get("profit").toString());
-        float maxProfit = (Float) detailObject.get("maxProfit");
+        float maxProfit = Float.parseFloat(detailObject.get("maxProfit").toString());
         long upExp = Long.parseLong(detailObject.get("upExp").toString());
         int unCrowdedness = (Integer)detailObject.get("unCrowdedness");
         int safety = (Integer)detailObject.get("safety");

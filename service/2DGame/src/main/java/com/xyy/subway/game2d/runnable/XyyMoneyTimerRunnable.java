@@ -30,13 +30,13 @@ public class XyyMoneyTimerRunnable implements Runnable {
 
         // 读出建造状态,直到建造完成开始金币计算
         VStationStore vStationStore = new VStationStore();
-        try {
-            vStationStore = vStationStoreService.getVStationStoreInfoById(storeId);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        int status = vStationStore.getStatus();
         while (true) {
+            try {
+                vStationStore = vStationStoreService.getVStationStoreInfoById(storeId);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            int status = vStationStore.getStatus();
             if (status == 1) {
                 exit = true;
                 break;
