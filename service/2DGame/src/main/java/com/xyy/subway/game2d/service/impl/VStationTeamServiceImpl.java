@@ -8,6 +8,7 @@ import com.xyy.subway.game2d.error.BusinessException;
 import com.xyy.subway.game2d.error.EnumBusinessError;
 import com.xyy.subway.game2d.service.VStationTeamService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 /**
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
  * @description
  */
 @Service
+@Scope("prototype")
 public class VStationTeamServiceImpl implements VStationTeamService {
 
     @Autowired

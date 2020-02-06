@@ -51,9 +51,12 @@ public class VStationStore {
     @ApiModelProperty(value = "最大存储金币", name = "maxProfit", example = "")
     private Float maxProfit;
 
-    @ApiModelProperty(value = "已获得金币", name = "availableProfitt", example = "")
+    @ApiModelProperty(value = "已获得金币", name = "availableProfit", example = "")
     private Float availableProfit;
 
     @ApiModelProperty(value = "是否已被删除", name = "isDeleted", example = "")
     private Integer isDeleted;
+
+    @ApiModelProperty(value = "是否有升级操作", name = "isLevelup", example = "")
+    private Integer isLevelup;
 }

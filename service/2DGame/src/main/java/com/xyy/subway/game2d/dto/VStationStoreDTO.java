@@ -47,4 +47,7 @@ public class VStationStoreDTO {
 
     @ApiModelProperty(value = "是否已被删除", name = "isDeleted", example = "")
     private Integer isDeleted;
+
+    @ApiModelProperty(value = "是否有升级操作", name = "isLevelup", example = "")
+    private Integer isLevelup;
 }

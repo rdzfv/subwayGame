@@ -10,6 +10,7 @@ import com.xyy.subway.game2d.service.ToolService;
 import com.xyy.subway.game2d.service.VStationStoreService;
 import com.xyy.subway.game2d.service.VUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
  * @description
  */
 @Service
+@Scope("prototype")
 public class ToolServiceImpl implements ToolService {
     @Autowired
     private VStationStoreService vStationStoreService;

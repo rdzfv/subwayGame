@@ -6,6 +6,7 @@ import com.xyy.subway.game2d.service.VStationStoreService;
 import com.xyy.subway.game2d.service.impl.VStationStoreSerivceImpl;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
  */
 @Data
 @Service
+@Scope("prototype")
 public class XyyBuildingTimerRunnable implements Runnable {
 
     private VStationStoreService vStationStoreService;

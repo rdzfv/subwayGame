@@ -280,7 +280,7 @@ public class VStationStoreController extends BaseController {
         int unlockedIn = (Integer)detailObject.get("unlockedIn");
         int cost = (Integer)detailObject.get("cost");
         float profit = Float.parseFloat(detailObject.get("profit").toString());
-        int maxProfit = (Integer)detailObject.get("maxProfit");
+        float maxProfit = (Float) detailObject.get("maxProfit");
         long upExp = Long.parseLong(detailObject.get("upExp").toString());
         int unCrowdedness = (Integer)detailObject.get("unCrowdedness");
         int safety = (Integer)detailObject.get("safety");
@@ -319,6 +319,8 @@ public class VStationStoreController extends BaseController {
         vStationStore.setStatus(0);
         vStationStore.setRemainTime(building_time);
         vStationStore.setUrl(picUrl);
+        vStationStore.setMaxProfit(maxProfit);
+        vStationStore.setIsLevelup(1);
         VStationStore vStationStoreResult = vStationStoreService.postAStore(vStationStore);
 
         // 根据userId获取全部地铁站信息

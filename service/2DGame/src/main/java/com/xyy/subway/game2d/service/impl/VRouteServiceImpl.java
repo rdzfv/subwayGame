@@ -7,6 +7,7 @@ import com.xyy.subway.game2d.error.EnumBusinessError;
 import com.xyy.subway.game2d.service.VRouteService;
 import com.xyy.subway.game2d.service.VUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +18,7 @@ import java.util.List;
  * @description
  */
 @Service
+@Scope("prototype")
 public class VRouteServiceImpl implements VRouteService {
 
     @Autowired

@@ -5,6 +5,7 @@ import com.xyy.subway.game2d.entity.VUser;
 import com.xyy.subway.game2d.service.VStationStoreService;
 import com.xyy.subway.game2d.service.VUserService;
 import lombok.Data;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 /**
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
  */
 @Data
 @Service
+@Scope("prototype")
 public class XyyMoneyTimerRunnable implements Runnable {
 
     private VStationStoreService vStationStoreService;
@@ -24,13 +26,29 @@ public class XyyMoneyTimerRunnable implements Runnable {
 
     @Override
     public void run(){
-        boolean exit = true;
+        boolean exit = false;
+
+        // 读出建造状态,直到建造完成开始金币计算
+        VStationStore vStationStore = new VStationStore();
+        try {
+            vStationStore = vStationStoreService.getVStationStoreInfoById(storeId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        int status = vStationStore.getStatus();
+        while (true) {
+            if (status == 1) {
+                exit = true;
+                break;
+            }
+        }
+
+
         try {
             VStationStore vStationStoreResult = new VStationStore();
             while(exit) {
                 Thread.sleep(10000);
                 // 读出数据库中available金币数量
-                VStationStore vStationStore = new VStationStore();
                 try {
                     vStationStore = vStationStoreService.getVStationStoreInfoById(storeId);
                 } catch (Exception e) {
@@ -63,6 +81,19 @@ public class XyyMoneyTimerRunnable implements Runnable {
                 int isDeleted = vStationStoreResult.getIsDeleted();
                 if (isDeleted == 1) {
                     exit = false;
+                }
+
+                // 查询店铺是否有升级操作
+                int isLevelUp = vStationStoreResult.getIsLevelup();
+                if (isLevelUp == 1) {
+                    exit = false;
+                }
+                // 再将升级操作写回0
+                vStationStore.setIsLevelup(0);
+                try {
+                    vStationStoreService.updateStationStoreInfo(vStationStore);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         } catch (InterruptedException e) {
