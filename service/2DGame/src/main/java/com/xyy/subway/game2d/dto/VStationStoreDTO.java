@@ -2,6 +2,7 @@ package com.xyy.subway.game2d.dto;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.springframework.context.annotation.Scope;
 
 import java.util.Date;
 
@@ -11,6 +12,7 @@ import java.util.Date;
  * @description
  */
 @Data
+@Scope("prototype")
 public class VStationStoreDTO {
     @ApiModelProperty(value = "虚拟地铁站商店编号", name = "id", example = "")
     private Integer id;

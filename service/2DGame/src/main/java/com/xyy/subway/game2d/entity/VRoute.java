@@ -3,6 +3,7 @@ package com.xyy.subway.game2d.entity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.springframework.context.annotation.Scope;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,6 +18,7 @@ import java.util.Date;
  */
 @Data
 @Entity
+@Scope("prototype")
 @ApiModel(value = "虚拟线路", description = "虚拟线路")
 public class VRoute {
     @Id

@@ -119,4 +119,21 @@ public class VUserController extends BaseController {
         }
         return CommonReturnType.create(vRouteStationDTOS);
     }
+
+
+
+    /**
+     * @author xyy
+     * @date 2020/2/9 19:47
+    */
+    @ApiOperation(value="通过等级获取各项服务的可用情况", tags={}, notes="")
+    @RequestMapping(value = "/getServiceStatusByLevel", method = RequestMethod.GET)
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="level", value="等级", dataType="int", paramType = "query", example="0")
+    })
+    @ResponseBody
+    public CommonReturnType getServiceStatusByLevel(@ApiParam(name="level", value = "等级", required = true) int level) throws BusinessException {
+        JSONObject jsonObject = toolService.listCanAndCantByLevel(level);
+        return CommonReturnType.create(jsonObject);
+    }
 }

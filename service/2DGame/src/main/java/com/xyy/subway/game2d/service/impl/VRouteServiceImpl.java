@@ -9,6 +9,7 @@ import com.xyy.subway.game2d.service.VUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -48,5 +49,26 @@ public class VRouteServiceImpl implements VRouteService {
     public List<VRoute> getVRoutesInfoByUserId(int id) throws BusinessException {
         List<VRoute> vRoutes = vRouteRespository.getAllByUserId(id);
         return vRoutes;
+    }
+
+
+
+
+    /**
+     * @author xyy
+     * @date 2020/2/9 21:22
+    */
+    @Override
+    public VRoute newAVRoute(int userId) throws BusinessException {
+        VRoute vRoute = new VRoute();
+        vRoute.setUserId(userId);
+        vRoute.setCleaness(100);
+        vRoute.setSatisfactionDegree(100);
+        vRoute.setSecurity(100);
+        vRoute.setUncrowedness(100);
+        vRoute.setVisitorsFlowrate(0L);
+
+        VRoute vRouteResult = vRouteRespository.save(vRoute);
+        return vRouteResult;
     }
 }

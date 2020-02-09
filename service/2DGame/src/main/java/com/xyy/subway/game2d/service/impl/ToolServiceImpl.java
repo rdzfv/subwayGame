@@ -1,9 +1,17 @@
 package com.xyy.subway.game2d.service.impl;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.xyy.subway.game2d.dao.DetailRespository;
 import com.xyy.subway.game2d.dto.ExpAndLevelDTO;
+import com.xyy.subway.game2d.dto.StationBuildDetailDTO;
+import com.xyy.subway.game2d.dto.StoreUpLevelUpDetailDTO;
+import com.xyy.subway.game2d.entity.Detail;
 import com.xyy.subway.game2d.entity.VStationStore;
+import com.xyy.subway.game2d.entity.VStationStoreType;
 import com.xyy.subway.game2d.entity.VUser;
 import com.xyy.subway.game2d.error.BusinessException;
+import com.xyy.subway.game2d.error.EnumBusinessError;
 import com.xyy.subway.game2d.runnable.XyyBuildingTimerRunnable;
 import com.xyy.subway.game2d.runnable.XyyMoneyTimerRunnable;
 import com.xyy.subway.game2d.service.ToolService;
@@ -13,6 +21,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author xyy
@@ -26,6 +38,8 @@ public class ToolServiceImpl implements ToolService {
     private VStationStoreService vStationStoreService;
     @Autowired
     private VUserService vUserService;
+    @Autowired
+    private DetailRespository detailRespository;
 
     @Override
     public ExpAndLevelDTO calculateExpAndLevel(Long exp) {
@@ -112,18 +126,188 @@ public class ToolServiceImpl implements ToolService {
     */
     @Override
     @Async
-    public void xyyMoneyTimer(int storeId, int userId, float profit, float maxProfit, VStationStoreService vStationStoreService) throws BusinessException {
+    public void xyyMoneyTimer(VStationStoreService vStationStoreService) throws BusinessException {
         XyyMoneyTimerRunnable xyyMoneyTimerRunnable = new XyyMoneyTimerRunnable();
-        xyyMoneyTimerRunnable.setStoreId(storeId);
-        xyyMoneyTimerRunnable.setProfit(profit);
-        xyyMoneyTimerRunnable.setMaxProfit(maxProfit);
+
         xyyMoneyTimerRunnable.setVStationStoreService(vStationStoreService);
-
         xyyMoneyTimerRunnable.run();
+    }
 
-        // 更新店铺已获得金币数
-        VStationStore vStationStore = vStationStoreService.getVStationStoreInfoById(storeId);
-        vStationStore.setAvailableProfit(maxProfit);
-        vStationStoreService.updateStationStoreInfo(vStationStore);
+
+
+
+    /**
+     * @author xyy
+     * @date 2020/2/9 14:41
+    */
+    @Override
+    public boolean ifEnoughMoney(int id, long cost) {
+        VUser vUser = new VUser();
+        try {
+            vUser = vUserService.getVUserInfoById(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Long money = vUser.getMoney();
+        if (cost > money) {
+            return false;
+        }
+        return true;
+    }
+
+
+
+    /**
+     * @author xyy
+     * @date 2020/2/9 14:49
+    */
+    @Override
+    public boolean ifEnoughWorker(int id, int costWorker) {
+        VUser vUser = new VUser();
+        try {
+            vUser = vUserService.getVUserInfoById(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        int availableWorkers = vUser.getAvailableWorkers();
+        if (availableWorkers < costWorker) {
+            return false;
+        }
+        return true;
+    }
+
+
+
+    /**
+     * @author xyy
+     * @date 2020/2/9 15:08
+    */
+    @Override
+    public JSONObject listCanAndCantByLevel(int level) throws BusinessException{
+        // 构造返回对象
+        JSONObject object = new JSONObject();
+        // 查询店铺升级策略
+        for (int i = 1; i <= 4; i++) {
+            VStationStoreType vStationStoreType = vStationStoreService.getVStationStoreTypeInfoById(i);
+            String name = vStationStoreType.getName();
+
+            List<StoreUpLevelUpDetailDTO> storeUpLevelUpDetailDTOS = checkStoreUpLevelUpDetail(i);
+            for (int j = 0; j < storeUpLevelUpDetailDTOS.size(); j++) {
+                int unlockedIn = storeUpLevelUpDetailDTOS.get(j).getUnlockedIn();
+                object.put(name + (j + 1), level >= unlockedIn ? 1 : 0);
+            }
+        }
+
+        // 查询队伍升级策略
+
+
+        // 查询地铁站升级策略
+        List<StationBuildDetailDTO> stationBuildDetailDTOS = checkStationBuildDetail(1);
+        for(int i = 0; i < stationBuildDetailDTOS.size(); i++) {
+            if ("a".equals(stationBuildDetailDTOS.get(i).getUnLockedIn())) {
+                object.put("station" + (i + 1), "新用户赠送");
+                continue;
+            }
+            if ("b".equals(stationBuildDetailDTOS.get(i).getUnLockedIn())) {
+                object.put("station" + (i + 1), "完成新手教程获得");
+                continue;
+            }
+            int unLockedIn = Integer.parseInt(stationBuildDetailDTOS.get(i).getUnLockedIn());
+            object.put("station" + (i + 1), level >= unLockedIn ? 1 : 0);
+        }
+
+        return object;
+    }
+
+
+
+
+    /**
+     * @author xyy
+     * @date 2020/2/9 15:29
+    */
+    @Override
+    public List<StoreUpLevelUpDetailDTO> checkStoreUpLevelUpDetail(int storeType) {
+        VStationStoreType vStationStoreType = new VStationStoreType();
+        ArrayList<StoreUpLevelUpDetailDTO> storeUpLevelUpDetailDTOS = new ArrayList<>();
+        try {
+            vStationStoreType = vStationStoreService.getVStationStoreTypeInfoById(storeType);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        String detail = vStationStoreType.getDetail();
+        // 字符串转换为JSON数组
+        JSONArray detailArray = JSONArray.parseArray(detail);
+        for (int i = 0; i < detailArray.size(); i++) {
+            JSONObject detailObject = (JSONObject)detailArray.get(i);
+            StoreUpLevelUpDetailDTO storeUpLevelUpDetailDTO = new StoreUpLevelUpDetailDTO();
+
+            int unlockedIn = (Integer)detailObject.get("unlockedIn");
+            int cost = (Integer)detailObject.get("cost");
+            float profit = Float.parseFloat(detailObject.get("profit").toString());
+            float maxProfit = Float.parseFloat(detailObject.get("maxProfit").toString());
+            long upExp = Long.parseLong(detailObject.get("upExp").toString());
+            int unCrowdedness = (Integer)detailObject.get("unCrowdedness");
+            int safety = (Integer)detailObject.get("safety");
+            int tidy = (Integer)detailObject.get("tidy");
+            int worker = (Integer)detailObject.get("worker");
+            int visitor = (Integer)detailObject.get("visitor");
+            long building_time = Long.parseLong(detailObject.get("building_time").toString());
+            String picUrl = (String)detailObject.get("picUrl");
+
+            storeUpLevelUpDetailDTO.setUnlockedIn(unlockedIn);
+            storeUpLevelUpDetailDTO.setCost(cost);
+            storeUpLevelUpDetailDTO.setProfit(profit);
+            storeUpLevelUpDetailDTO.setMaxProfit(maxProfit);
+            storeUpLevelUpDetailDTO.setUpExp(upExp);
+            storeUpLevelUpDetailDTO.setUnCrowdedness(unCrowdedness);
+            storeUpLevelUpDetailDTO.setSafety(safety);
+            storeUpLevelUpDetailDTO.setTidy(tidy);
+            storeUpLevelUpDetailDTO.setWorker(worker);
+            storeUpLevelUpDetailDTO.setVisitor(visitor);
+            storeUpLevelUpDetailDTO.setBuilding_time(building_time);
+            storeUpLevelUpDetailDTO.setPicUrl(picUrl);
+
+            storeUpLevelUpDetailDTOS.add(storeUpLevelUpDetailDTO);
+        }
+
+        return storeUpLevelUpDetailDTOS;
+    }
+
+
+
+
+    /**
+     * @author xyy
+     * @date 2020/2/9 16:40
+    */
+    @Override
+    public List<StationBuildDetailDTO> checkStationBuildDetail(int id) {
+        Detail detail = detailRespository.getById(id);
+        String detailDetail = detail.getDetail();
+        ArrayList<StationBuildDetailDTO> stationBuildDetailDTOS = new ArrayList<>();
+
+        // 字符串转换为JSON数组
+        JSONArray detailArray = JSONArray.parseArray(detailDetail);
+
+        for (int i = 0; i < detailArray.size(); i++) {
+            JSONObject detailObject = (JSONObject)detailArray.get(i);
+            StationBuildDetailDTO storeUpLevelUpDetailDTO = new StationBuildDetailDTO();
+
+            int idid = (Integer)detailObject.get("id");
+            long cost = Long.parseLong(detailObject.get("cost").toString());
+            String unLockedIn = (String)detailObject.get("unLockedIn");
+            long exp = Long.parseLong(detailObject.get("exp").toString());
+
+            storeUpLevelUpDetailDTO.setId(idid);
+            storeUpLevelUpDetailDTO.setCost(cost);
+            storeUpLevelUpDetailDTO.setUnLockedIn(unLockedIn);
+            storeUpLevelUpDetailDTO.setExp(exp);
+
+            stationBuildDetailDTOS.add(storeUpLevelUpDetailDTO);
+        }
+        return stationBuildDetailDTOS;
     }
 }

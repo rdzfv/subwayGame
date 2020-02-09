@@ -13,4 +13,5 @@ import java.util.List;
 public interface VRouteService {
     VRoute getVRouteInfoById(int id) throws BusinessException;
     List<VRoute> getVRoutesInfoByUserId(int id) throws BusinessException;
+    VRoute newAVRoute(int userId) throws BusinessException;
 }

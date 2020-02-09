@@ -12,5 +12,5 @@ import com.xyy.subway.game2d.error.BusinessException;
 public interface VStationService {
     VStation updateVStationInfo(VStation vStation) throws BusinessException;
     VStation getVStationInfoById(int id) throws BusinessException;
-    JSONObject newAStation(int id, int routeId, String name) throws BusinessException;
+    JSONObject newAStation(int id, int routeId, String name, int type) throws BusinessException;
 }

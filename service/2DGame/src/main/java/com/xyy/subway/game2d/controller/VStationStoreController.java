@@ -9,9 +9,12 @@ import com.xyy.subway.game2d.error.BusinessException;
 import com.xyy.subway.game2d.error.EnumBusinessError;
 import com.xyy.subway.game2d.response.CommonReturnType;
 import com.xyy.subway.game2d.service.*;
+import com.xyy.subway.game2d.service.impl.ToolServiceImpl;
+import com.xyy.subway.game2d.service.impl.VStationStoreSerivceImpl;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -244,9 +247,6 @@ public class VStationStoreController extends BaseController {
         int storeId = vStationStore.getId();
         toolService.xyyBuildingTimer(building_time, vStationStoreResult.getId(), worker, id, vStationStoreService); //创建线程任务时，直接将所需依赖注入的bean携带进子线程中
 
-        // 开始金币计时
-        toolService.xyyMoneyTimer(vStationStoreResult.getId(), id, profit, maxProfit, vStationStoreService);
-
         return CommonReturnType.create(object);
     }
 
@@ -293,16 +293,17 @@ public class VStationStoreController extends BaseController {
 
 
         // 验证当前账户金钱是否充足
-        VUser vUser =  vUserService.getVUserInfoById(id);
-        Long money = vUser.getMoney();
-        if (cost > money) {
+        boolean ifEnoughMoney = toolService.ifEnoughMoney(id, cost);
+        if (!ifEnoughMoney) {
             throw new BusinessException(EnumBusinessError.USER_NOT_ENOUGH_MONEY);
         }
+
         // 验证当前账户小工是否充足
-        int availableWorkers = vUser.getAvailableWorkers();
-        if (availableWorkers < worker) {
+        boolean ifEnoughWorker = toolService.ifEnoughWorker(id, worker);
+        if (!ifEnoughWorker) {
             throw new BusinessException(EnumBusinessError.USER_NOT_ENOUGH_WORKER);
         }
+
         // 获取当前地铁站信息
         VStation vStation = vStationService.getVStationInfoById(stationId);
         vStation.setSatisfaction(vStation.getSecurity() + safety);
@@ -366,6 +367,7 @@ public class VStationStoreController extends BaseController {
         int satisfiyed = (cleanSum + safeSum + uncrowdedSum) / 3;
 
         // 更新用户信息
+        VUser vUser = vUserService.getVUserInfoById(id);
         vUser.setCleaness(cleanSum);
         vUser.setSecurity(safeSum);
         vUser.setUncrowedness(uncrowdedSum);
@@ -397,9 +399,6 @@ public class VStationStoreController extends BaseController {
 
         // 开始建筑计时
         toolService.xyyBuildingTimer(building_time, storeId, worker, id, vStationStoreService); //创建线程任务时，直接将所需依赖注入的bean携带进子线程中
-
-        // 开始金币计时
-        toolService.xyyMoneyTimer(storeId, id, profit, maxProfit, vStationStoreService);
 
         return CommonReturnType.create(object);
     }
@@ -484,5 +483,23 @@ public class VStationStoreController extends BaseController {
         VStationStore vStationStore = vStationStoreService.removeStore(id);
         if (vStationStore == null) throw new BusinessException(EnumBusinessError.VSTATIONSTORE_NOT_EXIST);
         return CommonReturnType.create(vStationStore);
+    }
+
+
+
+
+    /**
+     * @author xyy
+     * @date 2020/2/5 10:30
+     */
+    @ApiOperation(value="开启金币计算线程", tags={}, notes="")
+    @RequestMapping(value = "/start", method = RequestMethod.GET)
+    @ResponseBody
+    public void removeStore() throws BusinessException {
+        try {
+            toolService.xyyMoneyTimer(vStationStoreService);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -13,6 +13,7 @@ import com.xyy.subway.game2d.service.VStationStoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -134,5 +135,18 @@ public class VStationStoreSerivceImpl implements VStationStoreService {
         vStationStore.setIsDeleted(1);
         VStationStore vStationStoreResult = vStationStoreRespository.save(vStationStore);
         return vStationStoreResult;
+    }
+
+
+
+
+    /**
+     * @author xyy
+     * @date 2020/1/28 16:06
+     */
+    @Override
+    public List<VStationStore> getVStationStoreInfo() throws BusinessException {
+        List<VStationStore> vStationStores = vStationStoreRespository.findAll();
+        return vStationStores;
     }
 }

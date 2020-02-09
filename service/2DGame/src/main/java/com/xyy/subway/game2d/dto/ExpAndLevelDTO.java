@@ -1,6 +1,7 @@
 package com.xyy.subway.game2d.dto;
 
 import lombok.Data;
+import org.springframework.context.annotation.Scope;
 
 /**
  * @author xyy
@@ -8,6 +9,7 @@ import lombok.Data;
  * @description
  */
 @Data
+@Scope("prototype")
 public class ExpAndLevelDTO {
     Integer level;
     Long exp;

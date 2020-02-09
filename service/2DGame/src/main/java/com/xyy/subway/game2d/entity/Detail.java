@@ -12,22 +12,20 @@ import javax.persistence.Id;
 
 /**
  * @author xyy
- * @date 2020/1/23 16:17
+ * @date 2020/2/9 16:07
  * @description
  */
 @Data
 @Entity
 @Scope("prototype")
-@ApiModel(value = "虚拟地铁站团队类型", description = "虚拟地铁站团队类型")
-public class VStationTeamType {
+@ApiModel(value = "其余设定细节", description = "其余设定细节")
+public class Detail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @ApiModelProperty(value = "虚拟地铁站团队类型编号", name = "id", example = "")
+    @ApiModelProperty(value = "其余设定细节编号", name = "id", example = "")
     private Integer id;
 
-    @ApiModelProperty(value = "虚拟地铁站团队类型名称", name = "name", example = "")
-    private String name;
-
-    @ApiModelProperty(value = "虚拟地铁站团队类型详情", name = "detail", example = "")
+    @ApiModelProperty(value = "其余设定细节详情", name = "detail", example = "")
     private String detail;
 }
+

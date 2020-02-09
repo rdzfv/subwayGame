@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.models.auth.In;
 import lombok.Data;
+import org.springframework.context.annotation.Scope;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,6 +18,7 @@ import javax.persistence.Id;
  */
 @Data
 @Entity
+@Scope("prototype")
 @ApiModel(value = "虚拟地铁站团队", description = "虚拟地铁站团队")
 public class VStationTeam {
     @Id

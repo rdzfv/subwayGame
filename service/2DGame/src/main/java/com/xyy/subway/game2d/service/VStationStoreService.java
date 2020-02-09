@@ -4,6 +4,7 @@ import com.xyy.subway.game2d.entity.VStationStore;
 import com.xyy.subway.game2d.entity.VStationStoreType;
 import com.xyy.subway.game2d.error.BusinessException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,4 +21,5 @@ public interface VStationStoreService {
     VStationStore updateStationStoreInfo(VStationStore vStationStore) throws BusinessException;
     VStationStore moveStore(int id, int newPos) throws BusinessException;
     VStationStore removeStore(int id) throws BusinessException;
+    List<VStationStore> getVStationStoreInfo() throws BusinessException;
 }

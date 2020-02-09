@@ -2,6 +2,7 @@ package com.xyy.subway.game2d.dto;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.springframework.context.annotation.Scope;
 
 /**
  * @author xyy
@@ -9,6 +10,7 @@ import lombok.Data;
  * @description
  */
 @Data
+@Scope("prototype")
 public class VRouteStationDTO {
     @ApiModelProperty(value = "用户id", name = "userId", example = "")
     private Integer userId;

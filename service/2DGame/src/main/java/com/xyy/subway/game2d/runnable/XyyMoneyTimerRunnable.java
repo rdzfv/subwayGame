@@ -1,12 +1,19 @@
 package com.xyy.subway.game2d.runnable;
 
+import com.xyy.subway.game2d.entity.VRoute;
+import com.xyy.subway.game2d.entity.VStation;
 import com.xyy.subway.game2d.entity.VStationStore;
 import com.xyy.subway.game2d.entity.VUser;
+import com.xyy.subway.game2d.service.VRouteService;
+import com.xyy.subway.game2d.service.VStationService;
 import com.xyy.subway.game2d.service.VStationStoreService;
 import com.xyy.subway.game2d.service.VUserService;
 import lombok.Data;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author xyy
@@ -15,90 +22,80 @@ import org.springframework.stereotype.Service;
  */
 @Data
 @Service
-@Scope("prototype")
 public class XyyMoneyTimerRunnable implements Runnable {
 
     private VStationStoreService vStationStoreService;
-    private float profit;
-    private float maxProfit;
-    private int storeId;
-    private float availableProfit;
+    private VStationService vStationService;
+    private VRouteService vRouteService;
+    private VUserService vUserService;
 
     @Override
-    public void run(){
-        boolean exit = false;
-
-        // 读出建造状态,直到建造完成开始金币计算
-        VStationStore vStationStore = new VStationStore();
-        while (true) {
-            try {
-                vStationStore = vStationStoreService.getVStationStoreInfoById(storeId);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            int status = vStationStore.getStatus();
-            if (status == 1) {
-                exit = true;
-                break;
-            }
-        }
-
-
+    public void run() {
+        // 读出所有的站点
         try {
-            VStationStore vStationStoreResult = new VStationStore();
-            while(exit) {
-                Thread.sleep(10000);
-                // 读出数据库中available金币数量
-                try {
-                    vStationStore = vStationStoreService.getVStationStoreInfoById(storeId);
-                } catch (Exception e) {
-                    e.printStackTrace();
+            while (true) {
+                System.out.println("我在执行哦");
+                Thread.sleep(1000);
+                List<VStationStore> vStationStores = vStationStoreService.getVStationStoreInfo();
+                if (vStationStores == null) {
+                    continue;
                 }
-                availableProfit = vStationStore.getAvailableProfit();
-                availableProfit = availableProfit + profit * 10;
-                System.out.println(availableProfit);
-                if(availableProfit <= maxProfit) {
-                    // 更新金币数量
-                    try {
-                        vStationStore = vStationStoreService.getVStationStoreInfoById(storeId);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    vStationStore.setAvailableProfit(availableProfit);
-                    try {
-                        vStationStoreService.updateStationStoreInfo(vStationStore);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
+                int size = vStationStores.size();
+                for (int i = 0; i < size; i++) {
+                    VStationStore vStationStore = vStationStores.get(i);
 
-                // 查询店铺是否已被删除
-                try {
-                    vStationStoreResult = vStationStoreService.getVStationStoreInfoById(storeId);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                int isDeleted = vStationStoreResult.getIsDeleted();
-                if (isDeleted == 1) {
-                    exit = false;
-                }
+                    // 辗转获取userId
+                    int stationId = vStationStore.getVstationId();
+                    VStation vStation = vStationService.getVStationInfoById(stationId);
+                    int routeId = Integer.parseInt(vStation.getVrouteIds());
+                    VRoute vRoute = vRouteService.getVRouteInfoById(routeId);
+                    int userId = vRoute.getUserId();
 
-                // 查询店铺是否有升级操作
-                int isLevelUp = vStationStoreResult.getIsLevelup();
-                if (isLevelUp == 1) {
-                    exit = false;
-                }
-                // 再将升级操作写回0
-                vStationStore.setIsLevelup(0);
-                try {
-                    vStationStoreService.updateStationStoreInfo(vStationStore);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    // 获取用户的信息
+                    VUser vUser = vUserService.getVUserInfoById(userId);
+                    int satisfaction = vUser.getSatisfactionDegree();
+
+                    // 如果还在建造中就跳过
+                    if (vStationStore.getStatus() == 0) {
+                        continue;
+                    }
+
+                    // 如果已经删除了就跳过
+                    if (vStationStore.getIsDeleted() == 1) {
+                        continue;
+                    }
+
+                    int level = vStationStore.getLevel();
+                    float up = 0;
+                    if (satisfaction < 60) { // 较低满意度
+                        up = 1;
+                    } else if (satisfaction < 90) { // 普通满意度
+                        if (level == 1) {
+                            up = 1;
+                        } else if (level == 2) {
+                            up = 4;
+                        } else if (level == 3) {
+                            up = 10;
+                        }
+                    } else { // 较高满意度
+                        if (level == 1) {
+                            up = 1 * 1.2f;
+                        } else if (level == 2) {
+                            up = 4 * 1.2f;
+                        } else if (level == 3) {
+                            up = 10 * 1.2f;
+                        }
+                    }
+
+                    float avail = vStationStore.getAvailableProfit() + up;
+                    if (avail < vStationStore.getMaxProfit()) {
+                        vStationStore.setAvailableProfit(avail);
+                        vStationStoreService.postAStore(vStationStore);
+                    }
                 }
             }
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 }

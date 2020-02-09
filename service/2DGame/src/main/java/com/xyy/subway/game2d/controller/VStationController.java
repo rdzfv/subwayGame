@@ -132,19 +132,21 @@ public class VStationController extends BaseController {
      * @author xyy
      * @date 2020/2/2 15:49
     */
-    @ApiOperation(value="新建一个地铁站", tags={}, notes="")
+    @ApiOperation(value="新建一个地铁站", tags={}, notes="对于情景而言，完成用户引导后的填2，之后的填这是用户的第几个地铁站。对于routeId,新用户第一次没有线路，填0即可")
     @RequestMapping(value = "/newAStation", method = RequestMethod.POST)
     @ApiImplicitParams({
-            @ApiImplicitParam(name="id", value="用户id", dataType="int", paramType = "query", example="0"),
-            @ApiImplicitParam(name="routeId", value="地铁线id", dataType="int", paramType = "query", example="0"),
-            @ApiImplicitParam(name="name", value="地铁站名称", dataType="string", paramType = "query", example="0")
+            @ApiImplicitParam(name="id", value="用户id", dataType="int", paramType = "query", example=""),
+            @ApiImplicitParam(name="routeId", value="地铁线id", dataType="int", paramType = "query", example=""),
+            @ApiImplicitParam(name="name", value="地铁站名称", dataType="string", paramType = "query", example=""),
+            @ApiImplicitParam(name="type", value="情境", dataType="int", paramType = "query", example="")
     })
     @ResponseBody
     public CommonReturnType newAStation(@ApiParam(name="id", value = "用户id", required = true) int id,
                                         @ApiParam(name="routeId", value = "地铁线id", required = true) int routeId,
-                                        @ApiParam(name="name", value = "地铁站名称", required = true) String name
+                                        @ApiParam(name="name", value = "地铁站名称", required = true) String name,
+                                        @ApiParam(name="type", value="情境", required = true) int type
     ) throws BusinessException {
-        JSONObject returnJSON = vStationService.newAStation(id, routeId, name);
+        JSONObject returnJSON = vStationService.newAStation(id, routeId, name, type);
         return CommonReturnType.create(returnJSON);
     }
 

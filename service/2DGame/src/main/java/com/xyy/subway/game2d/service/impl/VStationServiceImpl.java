@@ -7,16 +7,21 @@ import com.xyy.subway.game2d.dao.VRouteRespository;
 import com.xyy.subway.game2d.dao.VStationRespository;
 import com.xyy.subway.game2d.dao.VuserRepository;
 import com.xyy.subway.game2d.dto.ExpAndLevelDTO;
+import com.xyy.subway.game2d.dto.StationBuildDetailDTO;
 import com.xyy.subway.game2d.entity.VRoute;
 import com.xyy.subway.game2d.entity.VStation;
 import com.xyy.subway.game2d.entity.VUser;
 import com.xyy.subway.game2d.error.BusinessException;
 import com.xyy.subway.game2d.error.EnumBusinessError;
 import com.xyy.subway.game2d.service.ToolService;
+import com.xyy.subway.game2d.service.VRouteService;
 import com.xyy.subway.game2d.service.VStationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * @author xyy
@@ -34,6 +39,8 @@ public class VStationServiceImpl implements VStationService {
     private VuserRepository vuserRepository;
     @Autowired
     private ToolService toolService;
+    @Autowired
+    private VRouteService vRouteService;
 
     /**
      * @author xyy
@@ -71,15 +78,45 @@ public class VStationServiceImpl implements VStationService {
      * @date 2020/2/2 15:58
     */
     @Override
-    public JSONObject newAStation(int id, int routeId, String name) throws BusinessException {
+    public JSONObject newAStation(int id, int routeId, String name, int type) throws BusinessException {
+        List<StationBuildDetailDTO> stationBuildDetailDTOS = toolService.checkStationBuildDetail(1);
+        StationBuildDetailDTO stationBuildDetailDTO = stationBuildDetailDTOS.get(type - 1);
+        String unLockedIn = stationBuildDetailDTO.getUnLockedIn();
+        float cost = stationBuildDetailDTO.getCost();
+        long exp = stationBuildDetailDTO.getExp();
 
-        // 查询用户判断金币是否足够
         VUser vUser = vuserRepository.getByUserId(id);
-        if (vUser.getMoney() < 50000) {
-            throw  new BusinessException(EnumBusinessError.USER_NOT_ENOUGH_MONEY);
+
+        // 情景校验
+        switch (type) {
+            // 新用户赠送
+            case 1: {
+                // 新建一条地铁线
+                VRoute vRoute = vRouteService.newAVRoute(id);
+                routeId = vRoute.getId();
+                break;
+            }
+
+            // 完成新手引导
+            case 2: {
+                break;
+            }
+
+            default: {
+                // 查询用户判断金币是否足够
+                if (vUser.getMoney() < cost) {
+                    throw  new BusinessException(EnumBusinessError.USER_NOT_ENOUGH_MONEY);
+                }
+                // 经验增加
+                vUser.setExp(vUser.getExp() + exp);
+                // 金币减少
+                vUser.setMoney((long)(vUser.getMoney() - cost));
+            }
+
+
         }
 
-        // station写入数据库
+        // 新建station并写入数据库
         VStation vStation = new VStation();
         vStation.setName(name);
         vStation.setVrouteIds(Integer.toString(routeId));
@@ -94,29 +131,40 @@ public class VStationServiceImpl implements VStationService {
         // 查询路线添加上新的地铁站并写回数据库
         VRoute vRoute = vRouteRespository.getById(routeId);
         String preStations = vRoute.getVstationIds();
-        preStations = preStations + "," + newStationId;
+        if ("".equals(preStations) || preStations == null) {
+            preStations = newStationId + "";
+        } else {
+            preStations = preStations + "," + newStationId;
+        }
         String[] stations = preStations.split(",");
         int stationNum = stations.length;
         vRoute.setVstationIds(preStations);
         vRouteRespository.save(vRoute);
 
         // 修改用户的各项指数并写回数据库
-        vUser.setExp(vUser.getExp() + 800);
-        long exp = vUser.getExp();
+        long expexp = vUser.getExp();
+        System.out.println(1);
         int level = vUser.getLevel();
-        vUser.setMoney(vUser.getMoney() - 50000);
+        System.out.println(1);
         vUser.setCleaness(vUser.getCleaness() / stationNum);
+        System.out.println(1);
         vUser.setUncrowedness(vUser.getUncrowedness() / stationNum);
+        System.out.println(1);
         vUser.setSecurity(vUser.getSecurity() / stationNum);
+        System.out.println(1);
         vUser.setSatisfactionDegree((vUser.getCleaness() + vUser.getSecurity() + vUser.getUncrowedness()) / 3);
+        System.out.println(1);
         vuserRepository.save(vUser);
+
+        System.out.println(1);
 
         // 判断是否升级
         int isUpLevel = 0;
-        ExpAndLevelDTO expAndLevelDTO = toolService.calculateExpAndLevel(exp);
+        ExpAndLevelDTO expAndLevelDTO = toolService.calculateExpAndLevel(expexp);
         if (expAndLevelDTO.getLevel() != level) {
             isUpLevel = 1;
         }
+
 
         // 构造返回对象
         JSONObject object = new JSONObject();
