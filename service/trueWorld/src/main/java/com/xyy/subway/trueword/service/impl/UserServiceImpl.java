@@ -44,10 +44,22 @@ public class UserServiceImpl implements UserService {
      * @date 2020/1/25 13:50
     */
     @Override
-    public UserInfo login(String openId) {
+    public ShowUserInfoDTO login(String openId) throws BusinessException {
         // 检查该用户是否已经存在
         UserInfo user = userRepository.getByOpenId(openId);
-        return user;
+        if (user == null) {
+            return null;
+        }
+
+        ShowUserInfoDTO showUserInfoDTO = new ShowUserInfoDTO();
+        showUserInfoDTO.setUserId(user.getUserId());
+        showUserInfoDTO.setName(user.getName());
+        showUserInfoDTO.setIcon_url(user.getIcon_url());
+        showUserInfoDTO.setFriend_ids(user.getFriend_ids());
+        showUserInfoDTO.setCreateTime(user.getCreateTime());
+        showUserInfoDTO.setModifyTime(user.getModifyTime());
+
+        return showUserInfoDTO;
     }
 
 
@@ -358,6 +370,31 @@ public class UserServiceImpl implements UserService {
         friend.setFriend_ids(newFriendFriendsJSONStr);
         UserInfo friendResult = userRepository.save(friend);
         return userResult;
+    }
+
+
+
+
+
+    /**
+     * @author xyy
+     * @date 2020/2/10 13:07
+    */
+    @Override
+    public ShowUserInfoDTO newAUser(UserInfo userInfo) throws BusinessException {
+        userInfo.setOpenId(userInfo.getOpenId());
+
+        UserInfo userInfoResult = userRepository.save(userInfo);
+
+        ShowUserInfoDTO showUserInfoDTO = new ShowUserInfoDTO();
+        showUserInfoDTO.setUserId(userInfoResult.getUserId());
+        showUserInfoDTO.setName(userInfoResult.getName());
+        showUserInfoDTO.setIcon_url(userInfoResult.getIcon_url());
+        showUserInfoDTO.setFriend_ids(userInfoResult.getFriend_ids());
+        showUserInfoDTO.setCreateTime(userInfoResult.getCreateTime());
+        showUserInfoDTO.setModifyTime(userInfoResult.getModifyTime());
+
+        return showUserInfoDTO;
     }
 
 }

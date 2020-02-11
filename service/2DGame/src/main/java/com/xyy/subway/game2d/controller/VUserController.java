@@ -136,4 +136,23 @@ public class VUserController extends BaseController {
         JSONObject jsonObject = toolService.listCanAndCantByLevel(level);
         return CommonReturnType.create(jsonObject);
     }
+
+
+
+
+
+    /**
+     * @author xyy
+     * @date 2020/2/10 13:42
+    */
+    @ApiOperation(value="通过用户id新建一个用户", tags={}, notes="！这个接口是给后台用的！前端新建用户不要请求这里！")
+    @RequestMapping(value = "/newAVUserByUserId", method = RequestMethod.GET)
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="userId", value="用户id", dataType="int", paramType = "query", example="")
+    })
+    @ResponseBody
+    public CommonReturnType newAVUserByUserId(@ApiParam(name="userId", value = "用户id", required = true) int userId) throws BusinessException {
+        VUser vUser = vuserService.newAVUserByUserId(userId);
+        return CommonReturnType.create(vUser);
+    }
 }

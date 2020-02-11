@@ -21,7 +21,6 @@ import javax.persistence.Id;
 @ApiModel(value = "虚拟用户", description = "虚拟用户")
 public class VUser {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @ApiModelProperty(value = "用户id", name = "userId", example = "")
     private Integer userId;
 
@@ -31,7 +30,7 @@ public class VUser {
     @ApiModelProperty(value = "等级", name = "level", example = "")
     private Integer level;
 
-    @ApiModelProperty(value = "经验值", name = "exp", example = "")
+    @ApiModelProperty(value = "金币", name = "exp", example = "")
     private Long money;
 
     @ApiModelProperty(value = "清洁指数", name = "cleaness", example = "")

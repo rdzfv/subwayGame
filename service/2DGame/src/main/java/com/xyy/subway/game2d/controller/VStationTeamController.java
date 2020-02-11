@@ -1,5 +1,6 @@
 package com.xyy.subway.game2d.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.xyy.subway.game2d.entity.VStationTeam;
 import com.xyy.subway.game2d.entity.VStationTeamType;
 import com.xyy.subway.game2d.error.BusinessException;
@@ -62,5 +63,28 @@ public class VStationTeamController extends BaseController {
         VStationTeamType vStationTeamType = vStationTeamService.getVStationTeamTypeInfoById(id);
         if (vStationTeamType == null) throw new BusinessException(EnumBusinessError.VSTATIONTEAMTYPE_NOT_EXIST);
         return CommonReturnType.create(vStationTeamType);
+    }
+
+
+
+
+     /**
+      * @author xyy
+      * @date 2020/2/10 19:00
+     */
+    @ApiOperation(value="新建一个建筑团队", tags={}, notes="")
+    @RequestMapping(value = "/newABuildingTeam", method = RequestMethod.GET)
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="id", value="用户id", dataType="int", paramType = "query", example=""),
+            @ApiImplicitParam(name="stationId", value="地铁站id", dataType="int", paramType = "query", example=""),
+            @ApiImplicitParam(name="level", value="建造团队等级数", dataType="int", paramType = "query", example=""),
+    })
+    @ResponseBody
+    public CommonReturnType newABuildingTeam(@ApiParam(name="id", value = "用户id", required = true) int id,
+                                             @ApiParam(name="stationId", value = "地铁站id", required = true) int stationId,
+                                             @ApiParam(name="level", value = "建造团队等级数", required = true) int level
+    ) throws BusinessException {
+        JSONObject jsonObject = vStationTeamService.newABuildingTeam(id, stationId, level);
+        return CommonReturnType.create(jsonObject);
     }
 }

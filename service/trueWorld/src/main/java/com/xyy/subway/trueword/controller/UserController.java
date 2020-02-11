@@ -89,11 +89,26 @@ public class UserController extends BaseController {
         if (wechatReturnJSON.get("openid") == null || wechatReturnJSON.get("session_key") == null) throw new BusinessException(EnumBusinessError.ILLEGAL_REQUEST);
         String openid = wechatReturnJSON.get("openid").toString();
         String session_key = wechatReturnJSON.get("session_key").toString();
+        System.out.println("用户openId" + openid);
 
         // 用户登录服务
-        UserInfo userInstanse = userService.login(code);
-        if (userInstanse == null) throw new BusinessException(EnumBusinessError.NEW_USER);
-        return CommonReturnType.create(userInstanse);
+        ShowUserInfoDTO showUserInfoDTO = userService.login(openid);
+
+        // 判断是否是新用户
+        if (showUserInfoDTO == null) {
+            // 新增一个用户
+            UserInfo userInfo = new UserInfo();
+            userInfo.setOpenId(openid);
+            userInfo.setIcon_url("");
+            userInfo.setName("");
+            userInfo.setFriend_ids("");
+            userInfo.setSessionKey("");
+            userInfo.setToken("");
+
+            showUserInfoDTO = userService.newAUser(userInfo);
+
+        }
+        return CommonReturnType.create(showUserInfoDTO);
     }
 
 
@@ -101,13 +116,27 @@ public class UserController extends BaseController {
      * @author xyy
      * @date 2020/1/25 14:04
     */
-    @ApiOperation(value="用户信息更新", tags={}, notes="（适用于新用户、老用户）返回更新后的用户信息。三个参数可以不用给全,id必给")
+    @ApiOperation(value="用户信息更新", tags={}, notes="（适用于新用户、老用户）返回更新后的用户信息。三个参数可以不用给全，id必给。如果是新用户,isNewUser填1")
     @RequestMapping(value = "/updateUserInfo", method = RequestMethod.POST)
     @ResponseBody
     public CommonReturnType updateUserInfo(UpdateUserInfoDTO updateUserInfoDTO) throws BusinessException {
+        ShowUserInfoDTO userInstanse = new ShowUserInfoDTO();
+        // 判断是否是新用户
+        if (updateUserInfoDTO.getIsNewUser() == -1) {
+            // 新增他的2d游戏账户
+            // 发送http请求到game2d服务
+            String url = "http://www.xuyuyan.com:9100/fwwb/game2d/user/newAVUserByUserId?userId=" + userInstanse.getUserId();
+            //get请求
+            HttpMethod method = HttpMethod.GET;
+            // 发送http请求并返回结果
+            String Result = httpClient.client_GET(url,method);
+            System.out.println(Result);
+
+        }
+
         // 用户更新资料
-        ShowUserInfoDTO userInstanse = userService.updateUserInfo(updateUserInfoDTO);
-        if (userInstanse == null) throw new BusinessException(EnumBusinessError.NEW_USER);
+        userInstanse = userService.updateUserInfo(updateUserInfoDTO);
+
         return CommonReturnType.create(userInstanse);
     }
 

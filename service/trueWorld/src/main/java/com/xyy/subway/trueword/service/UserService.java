@@ -18,11 +18,12 @@ import java.util.ArrayList;
 @Service
 public interface UserService {
     UserInfo getUserInfoById(int id) throws BusinessException;
-    UserInfo login(String openId);
+    ShowUserInfoDTO login(String openId) throws BusinessException;
     ShowUserInfoDTO updateUserInfo(UpdateUserInfoDTO showUserInfoDTO);
     ArrayList<FriendsDTO> listMyFriends(int id);
     UserInfo applyForFriend(int id, String friendName) throws BusinessException;
     UserInfo agreeForFriend(int id, int friendId) throws BusinessException;
     UserInfo deleteFriend(int id, int friendId) throws BusinessException;
     UserInfo rejectForFriend(int id, int friendId) throws BusinessException;
+    ShowUserInfoDTO newAUser(UserInfo userInfo) throws BusinessException;
 }

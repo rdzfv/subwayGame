@@ -52,5 +52,33 @@ public class VUserServiceImpl implements VUserService {
         return vUserInstance;
     }
 
+    
+    
+    
+    /**
+     * @author xyy
+     * @date 2020/2/10 13:51
+    */
+    @Override
+    public VUser newAVUserByUserId(int userId) throws BusinessException {
+        VUser vUser = new VUser();
+        vUser.setUserId(userId);
+        System.out.println(vUser.getUserId());
+        vUser.setExp(0L);
+        vUser.setSatisfactionDegree(100);
+        vUser.setSecurity(100);
+        vUser.setUncrowedness(100);
+        vUser.setCleaness(100);
+        vUser.setMoney(2000L);
+        vUser.setAvailableWorkers(0);
+        vUser.setLevel(1);
+        vUser.setVisitorFlowrate(0L);
+        vUser.setWorkers(0);
+
+        VUser vUserResult = vUserRepository.save(vUser);
+
+        return vUserResult;
+    }
+
 
 }

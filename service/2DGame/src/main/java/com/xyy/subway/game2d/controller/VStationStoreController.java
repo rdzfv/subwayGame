@@ -13,6 +13,7 @@ import com.xyy.subway.game2d.service.impl.ToolServiceImpl;
 import com.xyy.subway.game2d.service.impl.VStationStoreSerivceImpl;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -44,6 +45,8 @@ public class VStationStoreController extends BaseController {
     private VRouteService vRouteService;
     @Autowired
     private ToolService toolService;
+    @Autowired
+    private TimerService timerService;
 
     /**
      * @author xyy
@@ -495,11 +498,7 @@ public class VStationStoreController extends BaseController {
     @ApiOperation(value="开启金币计算线程", tags={}, notes="")
     @RequestMapping(value = "/start", method = RequestMethod.GET)
     @ResponseBody
-    public void removeStore() throws BusinessException {
-        try {
-            toolService.xyyMoneyTimer(vStationStoreService);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void start() throws BusinessException {
+        timerService.xyyMoneyTimer();
     }
 }

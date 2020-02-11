@@ -26,6 +26,9 @@ public class UpdateUserInfoDTO {
     @ApiModelProperty(value = "用户id", name = "userId", example = "0")
     private Integer userId;
 
+    @ApiModelProperty(value = "是否是新用户", name = "isNewUser", example = "0")
+    private Integer isNewUser;
+
     @ApiModelProperty(value = "游戏内的用户名", name = "name", example = "xyy")
     private String name;
 

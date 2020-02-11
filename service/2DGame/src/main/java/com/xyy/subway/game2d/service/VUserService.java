@@ -13,4 +13,5 @@ import org.springframework.stereotype.Service;
 public interface VUserService {
     VUser getVUserInfoById(int id) throws BusinessException;
     VUser updateUserInfo(VUser vUser) throws BusinessException;
+    VUser newAVUserByUserId(int userId) throws BusinessException;
 }

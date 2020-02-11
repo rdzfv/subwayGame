@@ -6,17 +6,14 @@ import com.xyy.subway.game2d.dao.DetailRespository;
 import com.xyy.subway.game2d.dto.ExpAndLevelDTO;
 import com.xyy.subway.game2d.dto.StationBuildDetailDTO;
 import com.xyy.subway.game2d.dto.StoreUpLevelUpDetailDTO;
-import com.xyy.subway.game2d.entity.Detail;
-import com.xyy.subway.game2d.entity.VStationStore;
-import com.xyy.subway.game2d.entity.VStationStoreType;
-import com.xyy.subway.game2d.entity.VUser;
+import com.xyy.subway.game2d.dto.VBuildTeamTypeDetailDTO;
+import com.xyy.subway.game2d.entity.*;
 import com.xyy.subway.game2d.error.BusinessException;
 import com.xyy.subway.game2d.error.EnumBusinessError;
 import com.xyy.subway.game2d.runnable.XyyBuildingTimerRunnable;
 import com.xyy.subway.game2d.runnable.XyyMoneyTimerRunnable;
-import com.xyy.subway.game2d.service.ToolService;
-import com.xyy.subway.game2d.service.VStationStoreService;
-import com.xyy.subway.game2d.service.VUserService;
+import com.xyy.subway.game2d.service.*;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.scheduling.annotation.Async;
@@ -40,6 +37,7 @@ public class ToolServiceImpl implements ToolService {
     private VUserService vUserService;
     @Autowired
     private DetailRespository detailRespository;
+
 
     @Override
     public ExpAndLevelDTO calculateExpAndLevel(Long exp) {
@@ -115,22 +113,6 @@ public class ToolServiceImpl implements ToolService {
         VStationStore vStationStoreInstance = vStationStoreService.getVStationStoreInfoById(storeId);
         vStationStoreInstance.setRemainTime(0L);
         vStationStoreService.updateStationStoreInfo(vStationStoreInstance);
-    }
-
-
-
-
-    /**
-     * @author xyy
-     * @date 2020/2/1 11:19
-    */
-    @Override
-    @Async
-    public void xyyMoneyTimer(VStationStoreService vStationStoreService) throws BusinessException {
-        XyyMoneyTimerRunnable xyyMoneyTimerRunnable = new XyyMoneyTimerRunnable();
-
-        xyyMoneyTimerRunnable.setVStationStoreService(vStationStoreService);
-        xyyMoneyTimerRunnable.run();
     }
 
 
@@ -309,5 +291,18 @@ public class ToolServiceImpl implements ToolService {
             stationBuildDetailDTOS.add(storeUpLevelUpDetailDTO);
         }
         return stationBuildDetailDTOS;
+    }
+
+    
+    
+    
+    
+    /**
+     * @author xyy
+     * @date 2020/2/10 19:18
+    */
+    @Override
+    public List<VBuildTeamTypeDetailDTO> checkBuildingTeamDetail(int defaultId) throws BusinessException {
+       return null;
     }
 }
