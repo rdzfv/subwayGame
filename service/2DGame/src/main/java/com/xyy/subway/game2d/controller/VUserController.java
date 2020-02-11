@@ -8,10 +8,7 @@ import com.xyy.subway.game2d.entity.*;
 import com.xyy.subway.game2d.error.BusinessException;
 import com.xyy.subway.game2d.error.EnumBusinessError;
 import com.xyy.subway.game2d.response.CommonReturnType;
-import com.xyy.subway.game2d.service.ToolService;
-import com.xyy.subway.game2d.service.VRouteService;
-import com.xyy.subway.game2d.service.VStationService;
-import com.xyy.subway.game2d.service.VUserService;
+import com.xyy.subway.game2d.service.*;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -42,6 +39,8 @@ public class VUserController extends BaseController {
     private VStationService vStationService;
     @Autowired
     private ToolService toolService;
+    @Autowired
+    private LevelCanAndCantService levelCanAndCantService;
 
 
     /**
@@ -133,7 +132,7 @@ public class VUserController extends BaseController {
     })
     @ResponseBody
     public CommonReturnType getServiceStatusByLevel(@ApiParam(name="level", value = "等级", required = true) int level) throws BusinessException {
-        JSONObject jsonObject = toolService.listCanAndCantByLevel(level);
+        JSONObject jsonObject = levelCanAndCantService.listCanAndCantByLevel(level);
         return CommonReturnType.create(jsonObject);
     }
 

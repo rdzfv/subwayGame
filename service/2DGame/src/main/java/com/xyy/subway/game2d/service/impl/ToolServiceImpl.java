@@ -3,10 +3,7 @@ package com.xyy.subway.game2d.service.impl;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.xyy.subway.game2d.dao.DetailRespository;
-import com.xyy.subway.game2d.dto.ExpAndLevelDTO;
-import com.xyy.subway.game2d.dto.StationBuildDetailDTO;
-import com.xyy.subway.game2d.dto.StoreUpLevelUpDetailDTO;
-import com.xyy.subway.game2d.dto.VBuildTeamTypeDetailDTO;
+import com.xyy.subway.game2d.dto.*;
 import com.xyy.subway.game2d.entity.*;
 import com.xyy.subway.game2d.error.BusinessException;
 import com.xyy.subway.game2d.error.EnumBusinessError;
@@ -162,49 +159,6 @@ public class ToolServiceImpl implements ToolService {
 
 
 
-    /**
-     * @author xyy
-     * @date 2020/2/9 15:08
-    */
-    @Override
-    public JSONObject listCanAndCantByLevel(int level) throws BusinessException{
-        // 构造返回对象
-        JSONObject object = new JSONObject();
-        // 查询店铺升级策略
-        for (int i = 1; i <= 4; i++) {
-            VStationStoreType vStationStoreType = vStationStoreService.getVStationStoreTypeInfoById(i);
-            String name = vStationStoreType.getName();
-
-            List<StoreUpLevelUpDetailDTO> storeUpLevelUpDetailDTOS = checkStoreUpLevelUpDetail(i);
-            for (int j = 0; j < storeUpLevelUpDetailDTOS.size(); j++) {
-                int unlockedIn = storeUpLevelUpDetailDTOS.get(j).getUnlockedIn();
-                object.put(name + (j + 1), level >= unlockedIn ? 1 : 0);
-            }
-        }
-
-        // 查询队伍升级策略
-
-
-        // 查询地铁站升级策略
-        List<StationBuildDetailDTO> stationBuildDetailDTOS = checkStationBuildDetail(1);
-        for(int i = 0; i < stationBuildDetailDTOS.size(); i++) {
-            if ("a".equals(stationBuildDetailDTOS.get(i).getUnLockedIn())) {
-                object.put("station" + (i + 1), "新用户赠送");
-                continue;
-            }
-            if ("b".equals(stationBuildDetailDTOS.get(i).getUnLockedIn())) {
-                object.put("station" + (i + 1), "完成新手教程获得");
-                continue;
-            }
-            int unLockedIn = Integer.parseInt(stationBuildDetailDTOS.get(i).getUnLockedIn());
-            object.put("station" + (i + 1), level >= unLockedIn ? 1 : 0);
-        }
-
-        return object;
-    }
-
-
-
 
     /**
      * @author xyy
@@ -291,18 +245,5 @@ public class ToolServiceImpl implements ToolService {
             stationBuildDetailDTOS.add(storeUpLevelUpDetailDTO);
         }
         return stationBuildDetailDTOS;
-    }
-
-    
-    
-    
-    
-    /**
-     * @author xyy
-     * @date 2020/2/10 19:18
-    */
-    @Override
-    public List<VBuildTeamTypeDetailDTO> checkBuildingTeamDetail(int defaultId) throws BusinessException {
-       return null;
     }
 }
