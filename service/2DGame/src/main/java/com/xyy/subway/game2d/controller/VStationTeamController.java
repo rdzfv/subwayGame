@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @date 2020/1/28 12:25
  * @description
  */
-@Api(value="VStationStoreController",tags={"虚拟站点商店接口"})
+@Api(value="VStationTeamController",tags={"虚拟站点队伍接口"})
 @Controller("/vstationteam")
 @RequestMapping("/vstationteam")
 @CrossOrigin(allowCredentials = "true", allowedHeaders = "*")
@@ -85,6 +85,32 @@ public class VStationTeamController extends BaseController {
                                              @ApiParam(name="level", value = "建造团队等级数", required = true) int level
     ) throws BusinessException {
         JSONObject jsonObject = vStationTeamService.newABuildingTeam(id, stationId, level);
+        return CommonReturnType.create(jsonObject);
+    }
+
+
+
+
+
+    /**
+     * @author xyy
+     * @date 2020/2/10 19:00
+     */
+    @ApiOperation(value="新建一个清洁/服务/安保团队", tags={}, notes="type为2是清洁团队，type为3是服务中心，type为3是安保团队")
+    @RequestMapping(value = "/newAOtherTeam", method = RequestMethod.GET)
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="id", value="用户id", dataType="int", paramType = "query", example=""),
+            @ApiImplicitParam(name="stationId", value="地铁站id", dataType="int", paramType = "query", example=""),
+            @ApiImplicitParam(name="level", value="团队等级数", dataType="int", paramType = "query", example=""),
+            @ApiImplicitParam(name="type", value="团队种类", dataType="int", paramType = "query", example="")
+    })
+    @ResponseBody
+    public CommonReturnType newAOtherTeam(@ApiParam(name="id", value = "用户id", required = true) int id,
+                                          @ApiParam(name="stationId", value = "地铁站id", required = true) int stationId,
+                                          @ApiParam(name="level", value = "建造团队等级数", required = true) int level,
+                                          @ApiParam(name="type", value = "团队种类", required = true) int type
+    ) throws BusinessException {
+        JSONObject jsonObject = vStationTeamService.newATeam(id, stationId, level, type);
         return CommonReturnType.create(jsonObject);
     }
 }
