@@ -122,16 +122,15 @@ public class UserController extends BaseController {
     public CommonReturnType updateUserInfo(UpdateUserInfoDTO updateUserInfoDTO) throws BusinessException {
         ShowUserInfoDTO userInstanse = new ShowUserInfoDTO();
         // 判断是否是新用户
-        if (updateUserInfoDTO.getIsNewUser() == -1) {
+        if (updateUserInfoDTO.getIsNewUser() == 1) {
             // 新增他的2d游戏账户
             // 发送http请求到game2d服务
-            String url = "http://www.xuyuyan.com:9100/fwwb/game2d/user/newAVUserByUserId?userId=" + userInstanse.getUserId();
+            String url = "http://47.101.146.28:7003/game2d/user/newAVUserByUserId?userId=" + updateUserInfoDTO.getUserId();
             //get请求
             HttpMethod method = HttpMethod.GET;
             // 发送http请求并返回结果
             String Result = httpClient.client_GET(url,method);
             System.out.println(Result);
-
         }
 
         // 用户更新资料
