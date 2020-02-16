@@ -305,4 +305,49 @@ public class VStationTeamServiceImpl implements VStationTeamService {
 
         return object;
     }
+
+
+
+
+
+    /**
+     * @author xyy
+     * @date 2020/2/15 19:49
+    */
+    @Override
+    public VStationTeamType updateBuildingTeamTypeDetail(String detail) throws BusinessException {
+        VStationTeamType vStationTeamType = new VStationTeamType();
+        vStationTeamType.setId(1);
+        vStationTeamType.setName("建筑团队");
+        vStationTeamType.setDetail(detail);
+
+        VStationTeamType vStationTeamTypeResult = vStationTeamTypeRespository.save(vStationTeamType);
+        return vStationTeamTypeResult;
+    }
+
+
+
+
+
+
+    /**
+     * @author xyy
+     * @date 2020/2/16 10:52
+    */
+    @Override
+    public VStationTeamType updateOtherTeamTypeDetail(String detail, int type) throws BusinessException {
+        VStationTeamType vStationTeamType = new VStationTeamType();
+        vStationTeamType.setId(type);
+        if (type == 2) {
+            vStationTeamType.setName("清洁团队");
+        } else if (type == 3) {
+            vStationTeamType.setName("服务团队");
+        } else if (type == 4) {
+            vStationTeamType.setName("安保团队");
+        }
+        vStationTeamType.setDetail(detail);
+
+        VStationTeamType vStationTeamTypeResult = vStationTeamTypeRespository.save(vStationTeamType);
+        return vStationTeamTypeResult;
+    }
 }

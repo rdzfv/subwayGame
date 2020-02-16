@@ -1,11 +1,14 @@
 package com.xyy.subway.game2d.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.xyy.subway.game2d.dto.VBuildTeamTypeDetailDTO;
+import com.xyy.subway.game2d.dto.VTeamTypeDetailDTO;
 import com.xyy.subway.game2d.entity.VStationTeam;
 import com.xyy.subway.game2d.entity.VStationTeamType;
 import com.xyy.subway.game2d.error.BusinessException;
 import com.xyy.subway.game2d.error.EnumBusinessError;
 import com.xyy.subway.game2d.response.CommonReturnType;
+import com.xyy.subway.game2d.service.TeamDetailService;
 import com.xyy.subway.game2d.service.VStationStoreService;
 import com.xyy.subway.game2d.service.VStationTeamService;
 import io.swagger.annotations.*;
@@ -15,6 +18,9 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import net.sf.json.JSONArray;
+
+import java.util.List;
 
 /**
  * @author xyy
@@ -29,6 +35,8 @@ public class VStationTeamController extends BaseController {
     // 引入
     @Autowired
     private VStationTeamService vStationTeamService;
+    @Autowired
+    private TeamDetailService teamDetailService;
 
 
     /**
@@ -112,5 +120,66 @@ public class VStationTeamController extends BaseController {
     ) throws BusinessException {
         JSONObject jsonObject = vStationTeamService.newATeam(id, stationId, level, type);
         return CommonReturnType.create(jsonObject);
+    }
+
+
+
+
+    /**
+     * @author xyy
+     * @date 2020/2/15 19:09
+    */
+    @ApiOperation(value="修改建筑队伍类型的信息", tags={}, notes="")
+    @RequestMapping(value = "/updateBuildingTeamTypeInfo", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonReturnType updateBuildingTeamTypeInfo(VBuildTeamTypeDetailDTO vBuildTeamTypeDetailDTO) throws BusinessException {
+        // 取出上传的等级数
+        int level = vBuildTeamTypeDetailDTO.getLevel();
+
+        List<VBuildTeamTypeDetailDTO> vBuildTeamTypeDetailDTOS = teamDetailService.checkBuildingTeamDetail(1);
+        vBuildTeamTypeDetailDTOS.get(level - 1).setPicUrl(vBuildTeamTypeDetailDTO.getPicUrl());
+        vBuildTeamTypeDetailDTOS.get(level - 1).setIncreaseWorker(vBuildTeamTypeDetailDTO.getIncreaseWorker());
+        vBuildTeamTypeDetailDTOS.get(level - 1).setVisitor(vBuildTeamTypeDetailDTO.getVisitor());
+        vBuildTeamTypeDetailDTOS.get(level - 1).setCost(vBuildTeamTypeDetailDTO.getCost());
+        vBuildTeamTypeDetailDTOS.get(level - 1).setUnlockedIn(vBuildTeamTypeDetailDTO.getUnlockedIn());
+        vBuildTeamTypeDetailDTOS.get(level - 1).setUpExp(vBuildTeamTypeDetailDTO.getUpExp());
+
+        System.out.println(JSONArray.fromObject(vBuildTeamTypeDetailDTOS).toString());
+
+        // 写回数据库
+        VStationTeamType vStationTeamType = vStationTeamService.updateBuildingTeamTypeDetail(JSONArray.fromObject(vBuildTeamTypeDetailDTOS).toString());
+        return CommonReturnType.create(vStationTeamType);
+    }
+
+
+
+
+    /**
+     * @author xyy
+     * @date 2020/2/15 19:09
+     */
+    @ApiOperation(value="修改其他队伍类型的信息", tags={}, notes="")
+    @RequestMapping(value = "/updateOtherTeamTypeInfo", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonReturnType updateOtherTeamTypeInfo(VTeamTypeDetailDTO vTeamTypeDetailDTO) throws BusinessException {
+        // 取出上传的等级数和团队类型
+        int type = vTeamTypeDetailDTO.getType();
+        int level = vTeamTypeDetailDTO.getLevel();
+
+        List<VTeamTypeDetailDTO> vTeamTypeDetailDTOS = teamDetailService.checkOtherBuildingTeamDetail(type);
+        vTeamTypeDetailDTOS.get(level - 1).setPicUrl(vTeamTypeDetailDTO.getPicUrl());
+        vTeamTypeDetailDTOS.get(level - 1).setIncreaseUncrowded(vTeamTypeDetailDTO.getIncreaseUncrowded());
+        vTeamTypeDetailDTOS.get(level - 1).setVisitor(vTeamTypeDetailDTO.getVisitor());
+        vTeamTypeDetailDTOS.get(level - 1).setIncreaseTidy(vTeamTypeDetailDTO.getIncreaseTidy());
+        vTeamTypeDetailDTOS.get(level - 1).setCost(vTeamTypeDetailDTO.getCost());
+        vTeamTypeDetailDTOS.get(level - 1).setUnlockedIn(vTeamTypeDetailDTO.getUnlockedIn());
+        vTeamTypeDetailDTOS.get(level - 1).setUpExp(vTeamTypeDetailDTO.getUpExp());
+        vTeamTypeDetailDTOS.get(level - 1).setIncreaseSafe(vTeamTypeDetailDTO.getIncreaseSafe());
+
+        System.out.println(JSONArray.fromObject(vTeamTypeDetailDTOS).toString());
+
+        // 写回数据库
+        VStationTeamType vStationTeamType = vStationTeamService.updateOtherTeamTypeDetail(JSONArray.fromObject(vTeamTypeDetailDTOS).toString(), type);
+        return CommonReturnType.create(vStationTeamType);
     }
 }

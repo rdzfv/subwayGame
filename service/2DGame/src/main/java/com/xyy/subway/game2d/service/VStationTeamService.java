@@ -15,4 +15,6 @@ public interface VStationTeamService {
     VStationTeamType getVStationTeamTypeInfoById(int id) throws BusinessException;
     JSONObject newABuildingTeam(int id, int stationId, int level) throws BusinessException;
     JSONObject newATeam(int id, int stationId, int level, int type) throws BusinessException;
+    VStationTeamType updateBuildingTeamTypeDetail(String detail) throws BusinessException;
+    VStationTeamType updateOtherTeamTypeDetail(String detail, int type) throws BusinessException;
 }

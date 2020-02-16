@@ -20,13 +20,13 @@ import java.util.UUID;
  * @description
  */
 
-@Controller("/upload")
+@RestController("/upload")
 @RequestMapping("/upload")
 @CrossOrigin(allowCredentials = "true", allowedHeaders = "*")
 public class UploadController {
     @ApiOperation("上传文件到七牛")
     @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
-    public @ResponseBody
+    public  @ResponseBody
     Map<String, String> uploadSubmit(MultipartFile upfile, HttpServletRequest request) throws Exception {
 
         //创建目标文件
@@ -51,7 +51,7 @@ public class UploadController {
         result.put("original", upfile.getOriginalFilename());
         result.put("title", filename);
         result.put("type", extension);
-        result.put("url", "http://xuyuyan.cn/" + filename);
+        result.put("url", "http://qiniu.xuyuyan.cn/" + filename);
         return result;
     }
 

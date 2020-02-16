@@ -16,21 +16,21 @@ public class VBuildTeamTypeDetailDTO {
     @ApiModelProperty(value = "等级", name = "level", example = "")
     private Integer level;
 
-    @ApiModelProperty(value = "解锁等级", name = "level", example = "")
+    @ApiModelProperty(value = "解锁等级", name = "unlockedIn", example = "")
     private Integer unlockedIn;
 
-    @ApiModelProperty(value = "解锁花费", name = "level", example = "")
+    @ApiModelProperty(value = "解锁花费", name = "cost", example = "")
     private Long cost;
 
-    @ApiModelProperty(value = "解锁获得经验", name = "level", example = "")
+    @ApiModelProperty(value = "解锁获得经验", name = "upExp", example = "")
     private Long upExp;
 
-    @ApiModelProperty(value = "增加的人流量", name = "level", example = "")
+    @ApiModelProperty(value = "增加的人流量", name = "visitor", example = "")
     private Long visitor;
 
-    @ApiModelProperty(value = "增加的小工数", name = "level", example = "")
+    @ApiModelProperty(value = "增加的小工数", name = "increaseWorker", example = "")
     private Integer increaseWorker;
 
-    @ApiModelProperty(value = "图片url", name = "level", example = "")
+    @ApiModelProperty(value = "图片url", name = "picUrl", example = "")
     private String picUrl;
 }

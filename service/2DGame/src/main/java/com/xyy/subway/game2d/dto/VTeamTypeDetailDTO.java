@@ -10,6 +10,9 @@ import lombok.Data;
  */
 @Data
 public class VTeamTypeDetailDTO {
+    @ApiModelProperty(value = "团队类型", name = "type", example = "")
+    private Integer type;
+
     @ApiModelProperty(value = "团队名字", name = "name", example = "")
     private String name;
 

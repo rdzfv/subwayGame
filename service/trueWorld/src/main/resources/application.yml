@@ -2,6 +2,9 @@ server:
   port: 7001
   servlet:
     context-path: /trueWorld
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 1000MB
 
 spring:
   application:
