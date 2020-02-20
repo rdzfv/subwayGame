@@ -22,4 +22,5 @@ public interface VStationStoreService {
     VStationStore moveStore(int id, int newPos) throws BusinessException;
     VStationStore removeStore(int id) throws BusinessException;
     List<VStationStore> getVStationStoreInfo() throws BusinessException;
+    VStationStoreType updateStoreTypeDetail(String detail, int id) throws BusinessException;
 }

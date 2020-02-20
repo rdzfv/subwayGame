@@ -2,8 +2,7 @@ package com.xyy.subway.game2d.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.xyy.subway.game2d.dto.ExpAndLevelDTO;
-import com.xyy.subway.game2d.dto.VRouteStationDTO;
+import com.xyy.subway.game2d.dto.*;
 import com.xyy.subway.game2d.entity.*;
 import com.xyy.subway.game2d.error.BusinessException;
 import com.xyy.subway.game2d.error.EnumBusinessError;
@@ -500,5 +499,42 @@ public class VStationStoreController extends BaseController {
     @ResponseBody
     public void start() throws BusinessException {
         timerService.xyyMoneyTimer();
+    }
+
+
+
+
+
+    /**
+     * @author xyy
+     * @date 2020/2/16 17:55
+    */
+    @ApiOperation(value="修改各店铺类型的信息", tags={}, notes="")
+    @RequestMapping(value = "/updateStoreTypeInfo", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonReturnType updateStoreTypeInfo(StoreUpLevelUpDetailDTO storeUpLevelUpDetailDTO) throws BusinessException {
+        // 取出上传的等级数和团队类型
+        int type = storeUpLevelUpDetailDTO.getType();
+        int level = storeUpLevelUpDetailDTO.getLevel();
+
+        List<StoreUpLevelUpDetailDTO> StoreUpLevelUpDetailDTOS = toolService.checkStoreUpLevelUpDetail(type);
+        StoreUpLevelUpDetailDTOS.get(level - 1).setPicUrl(storeUpLevelUpDetailDTO.getPicUrl());
+        StoreUpLevelUpDetailDTOS.get(level - 1).setVisitor(storeUpLevelUpDetailDTO.getVisitor());
+        StoreUpLevelUpDetailDTOS.get(level - 1).setCost(storeUpLevelUpDetailDTO.getCost());
+        StoreUpLevelUpDetailDTOS.get(level - 1).setUnlockedIn(storeUpLevelUpDetailDTO.getUnlockedIn());
+        StoreUpLevelUpDetailDTOS.get(level - 1).setUpExp(storeUpLevelUpDetailDTO.getUpExp());
+        StoreUpLevelUpDetailDTOS.get(level - 1).setBuilding_time(storeUpLevelUpDetailDTO.getBuilding_time());
+        StoreUpLevelUpDetailDTOS.get(level - 1).setWorker(storeUpLevelUpDetailDTO.getWorker());
+        StoreUpLevelUpDetailDTOS.get(level - 1).setTidy(storeUpLevelUpDetailDTO.getTidy());
+        StoreUpLevelUpDetailDTOS.get(level - 1).setSafety(storeUpLevelUpDetailDTO.getSafety());
+        StoreUpLevelUpDetailDTOS.get(level - 1).setUnCrowdedness(storeUpLevelUpDetailDTO.getUnCrowdedness());
+        StoreUpLevelUpDetailDTOS.get(level - 1).setMaxProfit(storeUpLevelUpDetailDTO.getMaxProfit());
+        StoreUpLevelUpDetailDTOS.get(level - 1).setProfit(storeUpLevelUpDetailDTO.getProfit());
+
+        System.out.println(net.sf.json.JSONArray.fromObject(StoreUpLevelUpDetailDTOS).toString());
+
+        // 写回数据库
+        VStationStoreType vStationStoreType = vStationStoreService.updateStoreTypeDetail(net.sf.json.JSONArray.fromObject(StoreUpLevelUpDetailDTOS).toString(), type);
+        return CommonReturnType.create(vStationStoreType);
     }
 }

@@ -41,6 +41,8 @@ public class VUserController extends BaseController {
     private ToolService toolService;
     @Autowired
     private LevelCanAndCantService levelCanAndCantService;
+    @Autowired
+    private SumService sumService;
 
 
     /**
@@ -152,6 +154,50 @@ public class VUserController extends BaseController {
     @ResponseBody
     public CommonReturnType newAVUserByUserId(@ApiParam(name="userId", value = "用户id", required = true) int userId) throws BusinessException {
         VUser vUser = vuserService.newAVUserByUserId(userId);
+        return CommonReturnType.create(vUser);
+    }
+
+
+
+
+
+    /**
+     * @author xyy
+     * @date 2020/2/10 13:42
+     */
+    @ApiOperation(value="增加用户经验", tags={}, notes="！这个接口是给后台用的！前端不要请求这里！")
+    @RequestMapping(value = "/addExp", method = RequestMethod.GET)
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="userId", value="用户id", dataType="int", paramType = "query", example=""),
+            @ApiImplicitParam(name="exp", value="经验", dataType="int", paramType = "query", example="")
+    })
+    @ResponseBody
+    public CommonReturnType addExp(@ApiParam(name="userId", value = "用户id", required = true) int userId,
+                                   @ApiParam(name="exp", value = "经验", required = true) int exp
+    ) throws BusinessException {
+        JSONObject vUser = sumService.addExp(userId, exp);
+        return CommonReturnType.create(vUser);
+    }
+
+
+
+
+
+    /**
+     * @author xyy
+     * @date 2020/2/10 13:42
+     */
+    @ApiOperation(value="增加用户金币", tags={}, notes="！这个接口是给后台用的！前端不要请求这里！")
+    @RequestMapping(value = "/addMoney", method = RequestMethod.GET)
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="userId", value="用户id", dataType="int", paramType = "query", example=""),
+            @ApiImplicitParam(name="money", value="金币", dataType="int", paramType = "query", example="")
+    })
+    @ResponseBody
+    public CommonReturnType addMoney(@ApiParam(name="userId", value = "用户id", required = true) int userId,
+                                     @ApiParam(name="money", value = "金币", required = true) int money
+    ) throws BusinessException {
+        JSONObject vUser = sumService.addMoney(userId, money);
         return CommonReturnType.create(vUser);
     }
 }

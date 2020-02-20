@@ -149,4 +149,31 @@ public class VStationStoreSerivceImpl implements VStationStoreService {
         List<VStationStore> vStationStores = vStationStoreRespository.findAll();
         return vStationStores;
     }
+
+    
+    
+    
+    
+    /**
+     * @author xyy
+     * @date 2020/2/16 18:53
+    */
+    @Override
+    public VStationStoreType updateStoreTypeDetail(String detail, int id) throws BusinessException {
+        VStationStoreType vStationStoreType = new VStationStoreType();
+        vStationStoreType.setId(id);
+        if (id == 1) {
+            vStationStoreType.setName("甜品店");
+        } else if (id == 2) {
+            vStationStoreType.setName("快餐店");
+        } else if (id == 3) {
+            vStationStoreType.setName("服装店");
+        } else if (id == 4) {
+            vStationStoreType.setName("纪念品店");
+        }
+        vStationStoreType.setDetail(detail);
+
+        VStationStoreType vStationStoreTypeResult = vStationStoreTypeRespository.save(vStationStoreType);
+        return vStationStoreTypeResult;
+    }
 }
