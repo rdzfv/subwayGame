@@ -60,6 +60,9 @@ public class VUserController extends BaseController {
         if (vuserInstanse == null) throw new BusinessException(EnumBusinessError.USER_NOT_EXIST);
         ExpAndLevelDTO expAndLevelDTO = toolService.calculateExpAndLevel(vuserInstanse.getExp());
 
+        // 判断是否是当天首次登录
+
+
         JSONObject object = new JSONObject();
         object.put("user", vuserInstanse);
         object.put("levelDetail", expAndLevelDTO);

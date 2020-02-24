@@ -46,6 +46,11 @@ public class VStationStoreController extends BaseController {
     private ToolService toolService;
     @Autowired
     private TimerService timerService;
+    @Autowired
+    private DailyTaskService dailyTaskService;
+    @Autowired
+    private SumService sumService;
+
 
     /**
      * @author xyy
@@ -236,6 +241,48 @@ public class VStationStoreController extends BaseController {
         // 把更新后的用户信息写入数据库
         vUserService.updateUserInfo(vUser);
 
+        // 开始建筑计时
+        int storeId = vStationStore.getId();
+        toolService.xyyBuildingTimer(building_time, vStationStoreResult.getId(), worker, id, vStationStoreService); //创建线程任务时，直接将所需依赖注入的bean携带进子线程中
+
+        // 判断当日是否有建造店铺类任务
+        List<DailyTask> dailyTasks = dailyTaskService.getDailyTaskByUserId(id);
+        int size = dailyTasks.size();
+        DailyTask dailyTask = dailyTasks.get(size - 1);
+        int task2 = dailyTask.getTask2();
+        int task3 = dailyTask.getTask3();
+        int task4 = dailyTask.getTask4();
+        int task5 = dailyTask.getTask5();
+        int isAchieved = 0;
+        if (task2 == 6) {
+            dailyTask.setTodo2(1);
+            isAchieved = 1;
+        }
+        if (task3 == 6) {
+            dailyTask.setTodo3(1);
+            isAchieved = 1;
+        }
+        if (task4 == 6) {
+            dailyTask.setTodo4(1);
+            isAchieved = 1;
+        }
+        if (task5 == 6) {
+            dailyTask.setTodo5(1);
+            isAchieved = 1;
+        }
+        dailyTaskService.updateDailyTask(dailyTask);
+        // 如果完成了任务，添加奖励
+        DailyTaskDetail dailyTaskDetail = dailyTaskService.getDailyTaskDetailById(6);
+        String content = dailyTaskDetail.getContent();
+        // 字符串转换为JSON数组
+        JSONObject contentObject = JSONObject.parseObject(content);
+        int awardMoney = (Integer)contentObject.get("awardMoney");
+        int awardExp = (Integer)contentObject.get("awardExp");
+        // 增加属性
+        sumService.addExp(id, awardExp);
+        sumService.addMoney(id, awardMoney);
+        vUser = vUserService.getVUserInfoById(id);
+
         // 构造返回对象
         JSONObject object = new JSONObject();
         object.put("newStore", vStationStoreResult);
@@ -244,10 +291,8 @@ public class VStationStoreController extends BaseController {
         object.put("isSurprise", 0);
         object.put("levelDetail", expAndLevelDTO);
         object.put("storeTypeDetail", detailObject);
+        object.put("isAchieved", isAchieved);
 
-        // 开始建筑计时
-        int storeId = vStationStore.getId();
-        toolService.xyyBuildingTimer(building_time, vStationStoreResult.getId(), worker, id, vStationStoreService); //创建线程任务时，直接将所需依赖注入的bean携带进子线程中
 
         return CommonReturnType.create(object);
     }
@@ -390,6 +435,47 @@ public class VStationStoreController extends BaseController {
         // 把更新后的用户信息写入数据库
         vUserService.updateUserInfo(vUser);
 
+        // 开始建筑计时
+        toolService.xyyBuildingTimer(building_time, storeId, worker, id, vStationStoreService); //创建线程任务时，直接将所需依赖注入的bean携带进子线程中
+
+        // 判断当日是否有升级店铺类任务
+        List<DailyTask> dailyTasks = dailyTaskService.getDailyTaskByUserId(id);
+        int size = dailyTasks.size();
+        DailyTask dailyTask = dailyTasks.get(size - 1);
+        int task2 = dailyTask.getTask2();
+        int task3 = dailyTask.getTask3();
+        int task4 = dailyTask.getTask4();
+        int task5 = dailyTask.getTask5();
+        int isAchieved = 0;
+        if (task2 == 7) {
+            dailyTask.setTodo2(1);
+            isAchieved = 1;
+        }
+        if (task3 == 7) {
+            dailyTask.setTodo3(1);
+            isAchieved = 1;
+        }
+        if (task4 == 7) {
+            dailyTask.setTodo4(1);
+            isAchieved = 1;
+        }
+        if (task5 == 7) {
+            dailyTask.setTodo5(1);
+            isAchieved = 1;
+        }
+        dailyTaskService.updateDailyTask(dailyTask);
+        // 如果完成了任务，添加奖励
+        DailyTaskDetail dailyTaskDetail = dailyTaskService.getDailyTaskDetailById(6);
+        String content = dailyTaskDetail.getContent();
+        // 字符串转换为JSON数组
+        JSONObject contentObject = JSONObject.parseObject(content);
+        int awardMoney = (Integer)contentObject.get("awardMoney");
+        int awardExp = (Integer)contentObject.get("awardExp");
+        // 增加属性
+        sumService.addExp(id, awardExp);
+        sumService.addMoney(id, awardMoney);
+        vUser = vUserService.getVUserInfoById(id);
+
         // 构造返回对象
         JSONObject object = new JSONObject();
         object.put("newStore", vStationStoreResult);
@@ -398,9 +484,7 @@ public class VStationStoreController extends BaseController {
         object.put("isSurprise", 0);
         object.put("levelDetail", expAndLevelDTO);
         object.put("storeTypeDetail", detailObject);
-
-        // 开始建筑计时
-        toolService.xyyBuildingTimer(building_time, storeId, worker, id, vStationStoreService); //创建线程任务时，直接将所需依赖注入的bean携带进子线程中
+        object.put("isAchieved", isAchieved);
 
         return CommonReturnType.create(object);
     }

@@ -8,6 +8,7 @@ import com.xyy.subway.artree.dto.VTreeTypeDetailDTO;
 import com.xyy.subway.artree.entity.*;
 import com.xyy.subway.artree.error.BusinessException;
 import com.xyy.subway.artree.error.EnumBusinessError;
+import com.xyy.subway.artree.service.DailyTaskService;
 import com.xyy.subway.artree.service.VTreeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
@@ -38,6 +39,8 @@ public class VTreeServiceImpl implements VTreeService {
     private Gift2Repository gift2Repository;
     @Autowired
     private HttpClient httpClient;
+    @Autowired
+    private DailyTaskService dailyTaskService;
 
 
     /**
@@ -196,12 +199,82 @@ public class VTreeServiceImpl implements VTreeService {
         // 取出被浇水的用户的树的信息
         UserTree userTree = userTreeRepository.getByUserId(userId2);
 
+        // 判断当日是否有招标队伍类任务
+        List<DailyTask> dailyTasks = dailyTaskService.getDailyTaskByUserId(userId);
+        int size = dailyTasks.size();
+        DailyTask dailyTask = dailyTasks.get(size - 1);
+        int task2 = dailyTask.getTask2();
+        int task3 = dailyTask.getTask3();
+        int task4 = dailyTask.getTask4();
+        int task5 = dailyTask.getTask5();
+        int isAchieved = 0;
+        if (userId == userId2) {
+            if (task2 == 4) {
+                dailyTask.setTodo2(1);
+                isAchieved = 1;
+            }
+            if (task3 == 4) {
+                dailyTask.setTodo3(1);
+                isAchieved = 1;
+            }
+            if (task4 == 4) {
+                dailyTask.setTodo4(1);
+                isAchieved = 1;
+            }
+            if (task5 == 4) {
+                dailyTask.setTodo5(1);
+                isAchieved = 1;
+            }
+        } else {
+            if (task2 == 5) {
+                dailyTask.setTodo2(1);
+                isAchieved = 1;
+            }
+            if (task3 == 5) {
+                dailyTask.setTodo3(1);
+                isAchieved = 1;
+            }
+            if (task4 == 5) {
+                dailyTask.setTodo4(1);
+                isAchieved = 1;
+            }
+            if (task5 == 5) {
+                dailyTask.setTodo5(1);
+                isAchieved = 1;
+            }
+        }
+        dailyTaskService.updateDailyTask(dailyTask);
+        // 如果完成了任务，添加奖励
+        DailyTaskDetail dailyTaskDetail = dailyTaskService.getDailyTaskDetailById(6);
+        String content = dailyTaskDetail.getContent();
+        // 字符串转换为JSON数组
+        JSONObject contentObject = JSONObject.parseObject(content);
+        int awardMoney = (Integer)contentObject.get("awardMoney");
+        int awardExp = (Integer)contentObject.get("awardExp");
+        // 增加属性
+        // 发送http请求到game2d服务
+        String url = "http://47.101.146.28:7003/game2d/user/addExp?userId=" + userId + "&exp=" + awardExp;
+        //get请求
+        HttpMethod method = HttpMethod.GET;
+        // 发送http请求并返回结果
+        String Result = httpClient.client_GET(url,method);
+        System.out.println(Result);
+
+        // 发送http请求到game2d服务
+        String url2 = "http://47.101.146.28:7003/game2d/user/addMoney?userId=" + userId + "&money=" + awardMoney;
+        //get请求
+        HttpMethod method2 = HttpMethod.GET;
+        // 发送http请求并返回结果
+        String Result2 = httpClient.client_GET(url2, method2);
+        System.out.println(Result);
+
+
         // 取出浇水者的用户信息
         VTreeUser vTreeUser = vTreeUserRepository.getByUserId(userId);
         if (vTreeUser.getRemainWater() == 0) {
             throw new BusinessException(EnumBusinessError.NOT_ENOUGHT_WATER);
         }
-        if (vTreeUser.getRemainUsedToMe() == 0) {
+        if (vTreeUser.getRemainUsedToMe() == 0 && userId == userId2) {
             throw new BusinessException(EnumBusinessError.EXCEED_WATER_TO_SELF);
         }
         vTreeUser.setRemainWater(vTreeUser.getRemainWater() - 1);
@@ -259,6 +332,7 @@ public class VTreeServiceImpl implements VTreeService {
         object.put("userTree", userTreeResult);
         object.put("isLevelUp", isLevelUp);
         object.put("gift2", gift2);
+        object.put("isAchieved", isAchieved);
 
         return object;
     }

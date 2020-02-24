@@ -2,13 +2,16 @@ package com.xyy.subway.game2d.entity;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.context.annotation.Scope;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.Date;
 
 /**
  * @author xyy
@@ -16,8 +19,10 @@ import javax.persistence.Id;
  * @description
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
-@Scope("prototype")
+@EntityListeners(AuditingEntityListener.class)
 @ApiModel(value = "虚拟用户", description = "虚拟用户")
 public class VUser {
     @Id
@@ -53,4 +58,18 @@ public class VUser {
 
     @ApiModelProperty(value = "可用小工总数", name = "availableWorkers", example = "")
     private Integer availableWorkers;
+
+    @ApiModelProperty(value = "连续登录天数", name = "loginDays", example = "")
+    private Integer loginDays;
+
+    @ApiModelProperty(value = "强制修改位", name = "loginDays", example = "")
+    private Integer change0;
+
+    @CreatedDate
+    @ApiModelProperty(value = "创建时间", name = "createTime", example = "")
+    private Date createTime;
+
+    @LastModifiedDate
+    @ApiModelProperty(value = "更新时间", name = "updateTime", example = "")
+    private Date updateTime;
 }
