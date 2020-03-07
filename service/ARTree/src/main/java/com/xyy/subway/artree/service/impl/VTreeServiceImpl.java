@@ -487,4 +487,48 @@ public class VTreeServiceImpl implements VTreeService {
         VTreeUser vTreeUser = vTreeUserRepository.getByUserId(userId);
         return vTreeUser;
     }
+
+
+
+
+
+    /**
+     * @author xyy
+     * @date 2020/3/7 15:59
+    */
+    @Override
+    public List<Gift2> getAllWaterGiftt2() throws BusinessException {
+        List<Gift2> gift2s = gift2Repository.findAll();
+        return gift2s;
+    }
+
+
+
+
+
+    /**
+     * @author xyy
+     * @date 2020/3/7 16:15
+    */
+    @Override
+    public List<Gift2> updateWaterGiftt2(Gift2 gift2) throws BusinessException {
+        Gift2 gift2Result = gift2Repository.save(gift2);
+        List<Gift2> giftList = gift2Repository.findAll();
+        return giftList;
+    }
+
+
+
+
+
+    /**
+     * @author xyy
+     * @date 2020/3/7 18:27
+    */
+    @Override
+    public List<Gift2> addWaterGiftt2(Gift2 gift2) throws BusinessException {
+        Gift2 gift2Result = gift2Repository.save(gift2);
+        List<Gift2> giftList = gift2Repository.findAll();
+        return giftList;
+    }
 }

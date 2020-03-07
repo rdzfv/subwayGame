@@ -20,7 +20,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@ApiModel(value = "秘籍", description = "秘籍")
+@ApiModel(value = "浇水普通奖励", description = "浇水普通奖励")
 public class Gift2 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,6 +36,6 @@ public class Gift2 {
     @ApiModelProperty(value = "奖励水滴", name = "content", example = "")
     private Integer water;
 
-    @ApiModelProperty(value = "奖励水滴", name = "content", example = "")
+    @ApiModelProperty(value = "文字内容", name = "content", example = "")
     private String content;
 }

@@ -26,4 +26,7 @@ public interface VTreeService {
     UserTree getVFriendTreeByUserId(int userId) throws BusinessException;
     VTreeType getVTreeDetail() throws BusinessException;
     VTreeUser getUserInfo(int userId) throws BusinessException;
+    List<Gift2> getAllWaterGiftt2() throws BusinessException;
+    List<Gift2> updateWaterGiftt2(Gift2 gift2) throws BusinessException;
+    List<Gift2> addWaterGiftt2(Gift2 gift2) throws BusinessException;
 }

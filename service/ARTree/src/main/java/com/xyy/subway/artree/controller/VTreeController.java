@@ -210,4 +210,84 @@ public class VTreeController extends BaseController {
         VTreeUser vTreeType = vTreeService.getUserInfo(userId);
         return CommonReturnType.create(vTreeType);
     }
+
+
+
+
+    /**
+     * @author xyy
+     * @date 2020/3/7 15:54
+    */
+    @ApiOperation(value="获取全部浇水普通奖励",tags={}, notes="")
+    @RequestMapping(value = "/getAllWaterGiftt2", method = RequestMethod.GET)
+    @ResponseBody
+    public CommonReturnType getAllWaterGiftt2() throws BusinessException {
+        List<Gift2> gift2s = vTreeService.getAllWaterGiftt2();
+        return CommonReturnType.create(gift2s);
+    }
+
+
+
+
+    /**
+     * @author xyy
+     * @date 2020/3/7 16:01
+    */
+    @ApiOperation(value="修改浇水普通奖励",tags={}, notes="")
+    @RequestMapping(value = "/updateWaterGiftt2", method = RequestMethod.GET)
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="id", value="礼物id", dataType="int", paramType = "query", example=""),
+            @ApiImplicitParam(name="exp", value="奖励经验", dataType="int", paramType = "query", example=""),
+            @ApiImplicitParam(name="money", value="奖励金币", dataType="int", paramType = "query", example=""),
+            @ApiImplicitParam(name="water", value="奖励水滴", dataType="int", paramType = "query", example=""),
+            @ApiImplicitParam(name="content", value="文字内容", dataType="string", paramType = "query", example="")
+    })
+    @ResponseBody
+    public CommonReturnType updateWaterGiftt2(@ApiParam(name="id", value = "礼物id", required = true) int id,
+                                              @ApiParam(name="exp", value = "奖励经验", required = true) int exp,
+                                              @ApiParam(name="money", value = "奖励金币", required = true) int money,
+                                              @ApiParam(name="water", value = "奖励水滴", required = true) int water,
+                                              @ApiParam(name="content", value = "文字内容", required = true) String content
+    ) throws BusinessException {
+        Gift2 gift2 = new Gift2();
+        gift2.setWater(water);
+        gift2.setContent(content);
+        gift2.setExp(exp);
+        gift2.setMoney(money);
+        gift2.setId(id);
+
+        List<Gift2> gift2Result = vTreeService.updateWaterGiftt2(gift2);
+        return CommonReturnType.create(gift2Result);
+    }
+
+
+
+
+    /**
+     * @author xyy
+     * @date 2020/3/7 18:25
+    */
+    @ApiOperation(value="新增浇水普通奖励",tags={}, notes="")
+    @RequestMapping(value = "/addWaterGiftt2", method = RequestMethod.GET)
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="exp", value="奖励经验", dataType="int", paramType = "query", example=""),
+            @ApiImplicitParam(name="money", value="奖励金币", dataType="int", paramType = "query", example=""),
+            @ApiImplicitParam(name="water", value="奖励水滴", dataType="int", paramType = "query", example=""),
+            @ApiImplicitParam(name="content", value="文字内容", dataType="string", paramType = "query", example="")
+    })
+    @ResponseBody
+    public CommonReturnType addWaterGiftt2(@ApiParam(name="exp", value = "奖励经验", required = true) int exp,
+                                              @ApiParam(name="money", value = "奖励金币", required = true) int money,
+                                              @ApiParam(name="water", value = "奖励水滴", required = true) int water,
+                                              @ApiParam(name="content", value = "文字内容", required = true) String content
+    ) throws BusinessException {
+        Gift2 gift2 = new Gift2();
+        gift2.setWater(water);
+        gift2.setContent(content);
+        gift2.setExp(exp);
+        gift2.setMoney(money);
+
+        List<Gift2> gift2Result = vTreeService.addWaterGiftt2(gift2);
+        return CommonReturnType.create(gift2Result);
+    }
 }
