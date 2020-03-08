@@ -26,9 +26,12 @@ public class DailyTaskDetail {
     @ApiModelProperty(value = "每日任务设定编号", name = "id", example = "")
     private Integer id;
 
-    @ApiModelProperty(value = "每日任务设定类型", name = "id", example = "")
+    @ApiModelProperty(value = "每日任务设定类型", name = "type", example = "")
     private Integer type;
 
-    @ApiModelProperty(value = "每日任务设定细节", name = "id", example = "")
+    @ApiModelProperty(value = "每日任务设定细节", name = "content", example = "")
     private String content;
+
+    @ApiModelProperty(value = "每日任务设定文字", name = "words", example = "")
+    private String words;
 }

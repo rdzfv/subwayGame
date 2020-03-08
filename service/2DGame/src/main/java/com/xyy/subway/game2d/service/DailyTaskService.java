@@ -16,4 +16,7 @@ public interface DailyTaskService {
     DailyTask updateDailyTask(DailyTask dailyTask) throws BusinessException;
     DailyTaskDetail getDailyTaskDetailById(int id) throws BusinessException;
     DailyTask sign(int id) throws BusinessException;
+    List<DailyTaskDetail> getAllDailyTasks() throws BusinessException;
+    List<DailyTaskDetail> updateSignTask(int expADay, int moneyADay, int maxExp, int maxMoney) throws BusinessException;
+    List<DailyTaskDetail> updateOtherTask(int id, int awardMoney, int awardExp) throws BusinessException;
 }

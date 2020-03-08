@@ -1,5 +1,6 @@
 package com.xyy.subway.game2d.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.xyy.subway.game2d.dao.DailyTaskDetailResposity;
 import com.xyy.subway.game2d.dao.DailyTaskRespository;
 import com.xyy.subway.game2d.entity.DailyTask;
@@ -82,5 +83,86 @@ public class DailyTaskServiceImpl implements DailyTaskService {
         DailyTask dailyTaskResult = dailyTaskRespository.save(dailyTask);
 
         return dailyTaskResult;
+    }
+
+    
+    
+    
+    
+    
+    /**
+     * @author xyy
+     * @date 2020/3/8 11:22
+    */
+    @Override
+    public List<DailyTaskDetail> getAllDailyTasks() throws BusinessException {
+        List<DailyTaskDetail> dailyTaskDetails = dailyTaskDetailResposity.findAll();
+        return dailyTaskDetails;
+    }
+
+
+
+
+
+    /**
+     * @author xyy
+     * @date 2020/3/8 11:50
+    */
+    @Override
+    public List<DailyTaskDetail> updateSignTask(int expADay, int moneyADay, int maxExp, int maxMoney) throws BusinessException {
+        JSONObject object = new JSONObject();
+        object.put("expADay", expADay);
+        object.put("moneyADay", moneyADay);
+        object.put("maxExp", maxExp);
+        object.put("maxMoney", maxMoney);
+
+        String content = object.toString();
+
+        // 取出原来的
+        DailyTaskDetail dailyTaskDetailResult = dailyTaskDetailResposity.getById(1);
+        String words = dailyTaskDetailResult.getWords();
+
+        DailyTaskDetail dailyTaskDetail = new DailyTaskDetail();
+        dailyTaskDetail.setId(1);
+        dailyTaskDetail.setContent(content);
+        dailyTaskDetail.setWords(words);
+        dailyTaskDetailResposity.save(dailyTaskDetail);
+
+        // 再次查出全部的任务
+        List<DailyTaskDetail> dailyTaskDetails = dailyTaskDetailResposity.findAll();
+
+        return dailyTaskDetails;
+    }
+
+    
+    
+    
+    
+    
+    /**
+     * @author xyy
+     * @date 2020/3/8 13:40
+    */
+    @Override
+    public List<DailyTaskDetail> updateOtherTask(int id, int awardMoney, int awardExp) throws BusinessException {
+        // 取出原设定
+        DailyTaskDetail dailyTaskDetailResult = dailyTaskDetailResposity.getById(id);
+        String words = dailyTaskDetailResult.getWords();
+
+        JSONObject object = new JSONObject();
+        object.put("awardMoney", awardMoney);
+        object.put("awardExp", awardExp);
+        String content = object.toString();
+
+        DailyTaskDetail dailyTaskDetail = new DailyTaskDetail();
+        dailyTaskDetail.setId(id);
+        dailyTaskDetail.setWords(words);
+        dailyTaskDetail.setContent(content);
+        dailyTaskDetailResposity.save(dailyTaskDetail);
+
+        // 查出全部的
+        List<DailyTaskDetail> dailyTaskDetails = dailyTaskDetailResposity.findAll();
+
+        return dailyTaskDetails;
     }
 }
