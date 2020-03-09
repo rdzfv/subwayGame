@@ -9,8 +9,8 @@
         <outputRelativeToContentRoot value="true" />
         <module name="_2DGame" />
         <module name="trueWorld" />
-        <module name="zuull" />
         <module name="ARTree" />
+        <module name="zuull" />
         <module name="eureka" />
       </profile>
     </annotationProcessing>

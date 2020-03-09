@@ -290,4 +290,85 @@ public class VTreeController extends BaseController {
         List<Gift2> gift2Result = vTreeService.addWaterGiftt2(gift2);
         return CommonReturnType.create(gift2Result);
     }
+
+
+
+
+
+    /**
+     * @author xyy
+     * @date 2020/3/9 10:32
+    */
+    @ApiOperation(value="获取全部tip",tags={}, notes="")
+    @RequestMapping(value = "/getAllTips", method = RequestMethod.GET)
+    @ResponseBody
+    public CommonReturnType getAllTips() throws BusinessException {
+        List<Tips> gift2s = vTreeService.getAllTips();
+        return CommonReturnType.create(gift2s);
+    }
+
+
+
+
+
+
+    /**
+     * @author xyy
+     * @date 2020/3/9 10:47
+    */
+    @ApiOperation(value="根据id更新tip",tags={}, notes="")
+    @RequestMapping(value = "/updateTipsById", method = RequestMethod.GET)
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="tipId", value="秘籍Id", dataType="int", paramType = "query", example=""),
+            @ApiImplicitParam(name="content", value="秘籍内容", dataType="string", paramType = "query", example="")
+    })
+    @ResponseBody
+    public CommonReturnType updateTipsById(@ApiParam(name="tipId", value = "秘籍Id", required = true) int tipId,
+                                           @ApiParam(name="content", value = "秘籍内容", required = true) String content
+    ) throws BusinessException {
+        List<Tips> gift2s = vTreeService.updateTipsById(tipId, content);
+        return CommonReturnType.create(gift2s);
+    }
+
+
+
+
+
+
+    /**
+     * @author xyy
+     * @date 2020/3/9 11:05
+    */
+    @ApiOperation(value="新增tip",tags={}, notes="")
+    @RequestMapping(value = "/addTip", method = RequestMethod.GET)
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="content", value="秘籍内容", dataType="string", paramType = "query", example="")
+    })
+    @ResponseBody
+    public CommonReturnType addTipsById(@ApiParam(name="content", value = "秘籍内容", required = true) String content) throws BusinessException {
+        List<Tips> gift2s = vTreeService.addTipsById(content);
+        return CommonReturnType.create(gift2s);
+    }
+
+
+
+
+
+    /**
+     * @author xyy
+     * @date 2020/3/9 11:17
+    */
+    @ApiOperation(value="根据id删除tip",tags={}, notes="")
+    @RequestMapping(value = "/deleteTipsById", method = RequestMethod.GET)
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="tipId", value="秘籍Id", dataType="int", paramType = "query", example=""),
+            @ApiImplicitParam(name="content", value="秘籍内容", dataType="string", paramType = "query", example="")
+    })
+    @ResponseBody
+    public CommonReturnType deleteTipsById(@ApiParam(name="tipId", value = "秘籍Id", required = true) int tipId,
+                                           @ApiParam(name="content", value = "秘籍内容", required = true) String content
+    ) throws BusinessException {
+        List<Tips> gift2s = vTreeService.deleteTipsById(tipId, content);
+        return CommonReturnType.create(gift2s);
+    }
 }

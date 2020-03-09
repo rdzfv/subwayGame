@@ -531,4 +531,84 @@ public class VTreeServiceImpl implements VTreeService {
         List<Gift2> giftList = gift2Repository.findAll();
         return giftList;
     }
+
+
+
+
+
+
+    /**
+     * @author xyy
+     * @date 2020/3/9 10:35
+    */
+    @Override
+    public List<Tips> getAllTips() throws BusinessException {
+        List<Tips> tips = tipsRepository.findAll();
+        return tips;
+    }
+
+
+
+
+
+
+    /**
+     * @author xyy
+     * @date 2020/3/9 10:54
+    */
+    @Override
+    public List<Tips> updateTipsById(int tipId, String content) throws BusinessException {
+        Tips tip = new Tips();
+        tip.setId(tipId);
+        tip.setContent(content);
+        tipsRepository.save(tip);
+
+        // 再次取出
+        List<Tips> tips = tipsRepository.findAll();
+
+        return tips;
+    }
+
+
+
+
+
+
+    /**
+     * @author xyy
+     * @date 2020/3/9 11:12
+    */
+    @Override
+    public List<Tips> addTipsById(String content) throws BusinessException {
+        Tips tip = new Tips();
+        tip.setContent(content);
+        tipsRepository.save(tip);
+
+        // 取出全部
+        List<Tips> tips = tipsRepository.findAll();
+
+        return tips;
+    }
+
+
+
+
+
+
+    /**
+     * @author xyy
+     * @date 2020/3/9 11:21
+    */
+    @Override
+    public List<Tips> deleteTipsById(int tipId, String content) throws BusinessException {
+        Tips tip = new Tips();
+        tip.setId(tipId);
+        tip.setContent(content);
+        tipsRepository.delete(tip);
+
+        // 取出全部
+        List<Tips> tips = tipsRepository.findAll();
+
+        return tips;
+    }
 }

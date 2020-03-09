@@ -29,4 +29,8 @@ public interface VTreeService {
     List<Gift2> getAllWaterGiftt2() throws BusinessException;
     List<Gift2> updateWaterGiftt2(Gift2 gift2) throws BusinessException;
     List<Gift2> addWaterGiftt2(Gift2 gift2) throws BusinessException;
+    List<Tips> getAllTips() throws BusinessException;
+    List<Tips> updateTipsById(int tipId, String content) throws BusinessException;
+    List<Tips> addTipsById(String content) throws BusinessException;
+    List<Tips> deleteTipsById(int tipId, String content) throws BusinessException;
 }
